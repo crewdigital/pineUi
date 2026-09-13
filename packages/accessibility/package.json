@@ -1,0 +1,31 @@
+{
+  "name": "@pine-ui/accessibility",
+  "version": "0.0.1",
+  "description": "Systematic accessibility audit platform and testing helpers for Pine UI",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc --build",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "axe-core": "^4.10.2"
+  },
+  "devDependencies": {
+    "@pine-ui/tsconfig": "workspace:*"
+  },
+  "sideEffects": false
+}

@@ -1,0 +1,38 @@
+{
+  "name": "@pine-ui/stylex",
+  "version": "0.0.1",
+  "description": "StyleX typed design token variables and constants for Pine UI",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./vars": {
+      "types": "./dist/vars.stylex.d.ts",
+      "import": "./dist/vars.stylex.js"
+    },
+    "./tokens": {
+      "types": "./dist/tokens.d.ts",
+      "import": "./dist/tokens.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc --build",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@stylexjs/stylex": "^0.10.0"
+  },
+  "devDependencies": {
+    "@pine-ui/tsconfig": "workspace:*"
+  },
+  "sideEffects": false
+}

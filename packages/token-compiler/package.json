@@ -1,0 +1,30 @@
+{
+  "name": "@pine-ui/token-compiler",
+  "version": "0.0.1",
+  "description": "Deterministic DTCG Token Compiler for Pine UI",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "pine-tokens": "./dist/cli.js"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc --build",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@pine-ui/tsconfig": "workspace:*"
+  }
+}

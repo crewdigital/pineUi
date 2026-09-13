@@ -1,0 +1,30 @@
+{
+  "name": "@pine-ui/storybook",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Storybook component sandbox for Pine UI",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "dev": "storybook dev -p 6006",
+    "build": "storybook build -o storybook-static",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint ."
+  },
+  "devDependencies": {
+    "@pine-ui/build-config": "workspace:*",
+    "@pine-ui/react": "workspace:*",
+    "@pine-ui/stylex": "workspace:*",
+    "@pine-ui/themes": "workspace:*",
+    "@pine-ui/tsconfig": "workspace:*",
+    "@storybook/addon-a11y": "^8.5.8",
+    "@storybook/addon-essentials": "^8.5.8",
+    "@storybook/addon-interactions": "^8.5.8",
+    "@storybook/react": "^8.5.8",
+    "@storybook/react-vite": "^8.5.8",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "storybook": "^8.5.8",
+    "vite": "^6.1.1"
+  }
+}

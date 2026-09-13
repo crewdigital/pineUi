@@ -1,0 +1,28 @@
+{
+  "name": "@pine-ui/performance",
+  "version": "0.0.1",
+  "description": "Benchmark harness, memory profiling, and bundle analysis for Pine UI",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc --build",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@pine-ui/tsconfig": "workspace:*"
+  },
+  "sideEffects": false
+}

@@ -1,0 +1,34 @@
+{
+  "name": "@pine-ui/themes",
+  "version": "0.0.1",
+  "description": "Multi-brand, scheme, contrast, density, and motion themes for Pine UI",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./css/*": "./dist/css/*"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc --build",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@pine-ui/stylex": "workspace:*",
+    "@stylexjs/stylex": "^0.10.0"
+  },
+  "devDependencies": {
+    "@pine-ui/tsconfig": "workspace:*"
+  },
+  "sideEffects": [
+    "*.css"
+  ]
+}

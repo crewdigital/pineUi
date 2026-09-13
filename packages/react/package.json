@@ -1,0 +1,43 @@
+{
+  "name": "@pine-ui/react",
+  "version": "0.0.1",
+  "description": "Enterprise-grade React design system components for Pine UI",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./button": {
+      "types": "./dist/button/index.d.ts",
+      "import": "./dist/button/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc --build",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run"
+  },
+  "peerDependencies": {
+    "react": "^18.3.0 || ^19.0.0",
+    "react-dom": "^18.3.0 || ^19.0.0"
+  },
+  "dependencies": {
+    "@pine-ui/behaviors": "workspace:*",
+    "@pine-ui/primitives": "workspace:*",
+    "@pine-ui/stylex": "workspace:*",
+    "@stylexjs/stylex": "^0.10.0"
+  },
+  "devDependencies": {
+    "@pine-ui/testing": "workspace:*",
+    "@pine-ui/tsconfig": "workspace:*"
+  },
+  "sideEffects": false
+}

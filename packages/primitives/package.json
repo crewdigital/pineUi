@@ -1,0 +1,54 @@
+{
+  "name": "@pine-ui/primitives",
+  "version": "0.0.1",
+  "description": "Level 1 zero-runtime static layout and typography primitives for Pine UI",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./box": {
+      "types": "./dist/box/index.d.ts",
+      "import": "./dist/box/index.js"
+    },
+    "./stack": {
+      "types": "./dist/stack/index.d.ts",
+      "import": "./dist/stack/index.js"
+    },
+    "./grid": {
+      "types": "./dist/grid/index.d.ts",
+      "import": "./dist/grid/index.js"
+    },
+    "./text": {
+      "types": "./dist/text/index.d.ts",
+      "import": "./dist/text/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc --build",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run"
+  },
+  "peerDependencies": {
+    "react": "^18.3.0 || ^19.0.0"
+  },
+  "dependencies": {
+    "@pine-ui/stylex": "workspace:*",
+    "@stylexjs/stylex": "^0.10.0"
+  },
+  "devDependencies": {
+    "@pine-ui/testing": "workspace:*",
+    "@pine-ui/tsconfig": "workspace:*",
+    "@types/react": "^18.3.18",
+    "react": "^18.3.1"
+  },
+  "sideEffects": false
+}

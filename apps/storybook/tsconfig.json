@@ -1,0 +1,7 @@
+{
+  "extends": "../../tooling/typescript/react-library.json",
+  "compilerOptions": {
+    "noEmit": true
+  },
+  "include": [".storybook/**/*", "src/**/*", "../../packages/**/*.stories.tsx"]
+}
