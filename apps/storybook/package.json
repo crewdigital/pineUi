@@ -13,6 +13,7 @@
   },
   "devDependencies": {
     "@pine-ui/build-config": "workspace:*",
+    "@pine-ui/primitives": "workspace:*",
     "@pine-ui/react": "workspace:*",
     "@pine-ui/stylex": "workspace:*",
     "@pine-ui/themes": "workspace:*",

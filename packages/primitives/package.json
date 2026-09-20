@@ -19,13 +19,45 @@
       "types": "./dist/stack/index.d.ts",
       "import": "./dist/stack/index.js"
     },
+    "./inline": {
+      "types": "./dist/inline/index.d.ts",
+      "import": "./dist/inline/index.js"
+    },
+    "./cluster": {
+      "types": "./dist/cluster/index.d.ts",
+      "import": "./dist/cluster/index.js"
+    },
     "./grid": {
       "types": "./dist/grid/index.d.ts",
       "import": "./dist/grid/index.js"
     },
+    "./container": {
+      "types": "./dist/container/index.d.ts",
+      "import": "./dist/container/index.js"
+    },
+    "./surface": {
+      "types": "./dist/surface/index.d.ts",
+      "import": "./dist/surface/index.js"
+    },
     "./text": {
       "types": "./dist/text/index.d.ts",
       "import": "./dist/text/index.js"
+    },
+    "./heading": {
+      "types": "./dist/heading/index.d.ts",
+      "import": "./dist/heading/index.js"
+    },
+    "./separator": {
+      "types": "./dist/separator/index.d.ts",
+      "import": "./dist/separator/index.js"
+    },
+    "./visually-hidden": {
+      "types": "./dist/visually-hidden/index.d.ts",
+      "import": "./dist/visually-hidden/index.js"
+    },
+    "./focus-ring": {
+      "types": "./dist/focus-ring/index.d.ts",
+      "import": "./dist/focus-ring/index.js"
     }
   },
   "files": [

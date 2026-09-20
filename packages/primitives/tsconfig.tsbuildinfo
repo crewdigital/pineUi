@@ -1,1 +1,1 @@
-{"root":["./src/index.ts"],"version":"5.9.3"}
+{"root":["./src/index.ts","./src/box/box.test.tsx","./src/box/box.tsx","./src/box/index.ts"],"version":"5.9.3"}

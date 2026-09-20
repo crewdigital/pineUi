@@ -36,6 +36,22 @@ export async function checkAccessibility(
 }
 
 /**
+ * Asserts that a container has zero WCAG 2.2 AA accessibility violations.
+ */
+export async function expectNoA11yViolations(
+  container: Element,
+  options?: axe.RunOptions
+): Promise<void> {
+  const { violations } = await checkAccessibility(container, options);
+  if (violations.length > 0) {
+    const message = violations
+      .map((v) => `[${v.id}] ${v.description} (${v.nodes.length} nodes)\nHelp: ${v.helpUrl}`)
+      .join('\n\n');
+    throw new Error(`Accessibility violations detected:\n${message}`);
+  }
+}
+
+/**
  * Custom render method for React components in test suites.
  */
 export function render(ui: ReactElement, options?: Omit<RenderOptions, 'wrapper'>): RenderResult {

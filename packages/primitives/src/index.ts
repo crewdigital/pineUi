@@ -4,3 +4,6 @@
  */
 
 export const PRIMITIVES_VERSION = '0.0.1';
+
+export * from './box/index.js';
+

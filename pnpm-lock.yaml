@@ -62,6 +62,9 @@ importers:
       '@pine-ui/build-config':
         specifier: workspace:*
         version: link:../../tooling/build
+      '@pine-ui/primitives':
+        specifier: workspace:*
+        version: link:../../packages/primitives
       '@pine-ui/react':
         specifier: workspace:*
         version: link:../../packages/react
