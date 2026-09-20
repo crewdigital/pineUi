@@ -1,0 +1,123 @@
+{
+  "background": {
+    "$type": "color",
+    "canvas": { "$value": "{color.neutral.0}", "$description": "Page canvas in high contrast" },
+    "surface": { "$value": "{color.neutral.0}", "$description": "Surface in high contrast" },
+    "surfaceRaised": {
+      "$value": "{color.neutral.0}",
+      "$description": "Raised surface in high contrast"
+    },
+    "surfaceSubtle": {
+      "$value": "{color.neutral.100}",
+      "$description": "Subtle surface in high contrast"
+    },
+    "surfaceMuted": {
+      "$value": "{color.neutral.200}",
+      "$description": "Muted surface in high contrast"
+    },
+    "surfaceDisabled": {
+      "$value": "{color.neutral.100}",
+      "$description": "Disabled surface in high contrast"
+    },
+    "brand": { "$value": "{color.blue.800}", "$description": "High contrast brand fill" },
+    "brandSubtle": {
+      "$value": "{color.blue.50}",
+      "$description": "High contrast subtle brand fill"
+    },
+    "brandHover": { "$value": "{color.blue.900}", "$description": "High contrast brand hover" },
+    "brandActive": { "$value": "{color.blue.950}", "$description": "High contrast brand active" }
+  },
+  "foreground": {
+    "$type": "color",
+    "primary": {
+      "$value": "{color.neutral.1000}",
+      "$description": "Max-contrast text (pure black)"
+    },
+    "secondary": {
+      "$value": "{color.neutral.900}",
+      "$description": "High contrast secondary text"
+    },
+    "tertiary": { "$value": "{color.neutral.800}", "$description": "High contrast tertiary text" },
+    "muted": { "$value": "{color.neutral.700}", "$description": "High contrast placeholder text" },
+    "disabled": { "$value": "{color.neutral.500}", "$description": "High contrast disabled text" },
+    "inverse": { "$value": "{color.neutral.0}", "$description": "High contrast inverse text" },
+    "brand": { "$value": "{color.blue.800}", "$description": "High contrast brand text" }
+  },
+  "border": {
+    "$type": "color",
+    "subtle": { "$value": "{color.neutral.400}", "$description": "High contrast subtle border" },
+    "default": { "$value": "{color.neutral.800}", "$description": "High contrast standard border" },
+    "strong": { "$value": "{color.neutral.1000}", "$description": "High contrast strong border" },
+    "focus": { "$value": "{color.blue.900}", "$description": "High contrast focus border" },
+    "disabled": { "$value": "{color.neutral.400}", "$description": "High contrast disabled border" }
+  },
+  "action": {
+    "primary": {
+      "$type": "color",
+      "background": { "$value": "{color.blue.800}" },
+      "backgroundHover": { "$value": "{color.blue.900}" },
+      "backgroundActive": { "$value": "{color.blue.950}" },
+      "foreground": { "$value": "{color.neutral.0}" }
+    },
+    "secondary": {
+      "$type": "color",
+      "background": { "$value": "{color.neutral.0}" },
+      "backgroundHover": { "$value": "{color.neutral.100}" },
+      "backgroundActive": { "$value": "{color.neutral.200}" },
+      "foreground": { "$value": "{color.neutral.1000}" },
+      "border": { "$value": "{color.neutral.900}" }
+    },
+    "subtle": {
+      "$type": "color",
+      "background": { "$value": "transparent" },
+      "backgroundHover": { "$value": "{color.neutral.200}" },
+      "backgroundActive": { "$value": "{color.neutral.300}" },
+      "foreground": { "$value": "{color.neutral.1000}" }
+    },
+    "danger": {
+      "$type": "color",
+      "background": { "$value": "{color.red.800}" },
+      "backgroundHover": { "$value": "{color.red.900}" },
+      "backgroundActive": { "$value": "{color.red.950}" },
+      "foreground": { "$value": "{color.neutral.0}" }
+    }
+  },
+  "feedback": {
+    "success": {
+      "$type": "color",
+      "background": { "$value": "{color.green.50}" },
+      "border": { "$value": "{color.green.800}" },
+      "foreground": { "$value": "{color.green.950}" },
+      "solid": { "$value": "{color.green.800}" }
+    },
+    "warning": {
+      "$type": "color",
+      "background": { "$value": "{color.yellow.50}" },
+      "border": { "$value": "{color.yellow.800}" },
+      "foreground": { "$value": "{color.yellow.950}" },
+      "solid": { "$value": "{color.yellow.800}" }
+    },
+    "danger": {
+      "$type": "color",
+      "background": { "$value": "{color.red.50}" },
+      "border": { "$value": "{color.red.800}" },
+      "foreground": { "$value": "{color.red.950}" },
+      "solid": { "$value": "{color.red.800}" }
+    },
+    "info": {
+      "$type": "color",
+      "background": { "$value": "{color.blue.50}" },
+      "border": { "$value": "{color.blue.800}" },
+      "foreground": { "$value": "{color.blue.950}" },
+      "solid": { "$value": "{color.blue.800}" }
+    }
+  },
+  "focus": {
+    "$type": "color",
+    "ring": {
+      "$value": "{color.neutral.1000}",
+      "$description": "Maximum contrast solid black focus ring"
+    },
+    "offset": { "$value": "{color.neutral.0}", "$description": "White offset ring" }
+  }
+}

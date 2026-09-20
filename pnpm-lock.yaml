@@ -235,6 +235,16 @@ importers:
         specifier: workspace:*
         version: link:../../tooling/typescript
 
+  packages/tokens:
+    dependencies:
+      zod:
+        specifier: ^3.24.2
+        version: 3.25.76
+    devDependencies:
+      '@pine-ui/tsconfig':
+        specifier: workspace:*
+        version: link:../../tooling/typescript
+
   tooling/build:
     dependencies:
       '@stylexjs/babel-plugin':

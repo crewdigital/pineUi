@@ -85,26 +85,138 @@ This document serves as the single source of truth for the execution, status, an
 
 ## Phase 1 — Monorepo and Tooling Foundation
 
-- **Status:** `TODO`
+- **Status:** `DONE`
+
+### Task 1.1 — Workspace & Monorepo Setup
+
+- **Status:** `DONE`
+- **Purpose:** Establish pnpm workspace, Turborepo pipeline, strict TypeScript configurations, and package layout.
 - **Dependencies:** Phase 0 complete.
-- **Tasks:**
-  - Task 1.1 — Workspace & Monorepo Setup (pnpm, Turborepo, TS config presets)
-  - Task 1.2 — Code Quality & Linting (ESLint, Prettier, strict boundary checks)
-  - Task 1.3 — Testing Infrastructure (Vitest, React Testing Library, Playwright)
-  - Task 1.4 — Storybook & StyleX Integration
-  - Task 1.5 — Release Tooling (Changesets, CI publishing dry-run)
+- **Subtasks:**
+  - [x] Subtask 1.1.1 — Configure `pnpm-workspace.yaml` and root `package.json` with package scripts.
+  - [x] Subtask 1.1.2 — Configure Turborepo (`turbo.json`) with task caching, dependency graph, and build pipelines.
+  - [x] Subtask 1.1.3 — Author shared TypeScript configurations in `tooling/typescript` (`base.json`, `react-library.json`, `node.json`).
+  - [x] Subtask 1.1.4 — Establish package conventions and directories (`packages/*`, `tooling/*`, `apps/*`, `examples/*`).
+- **Acceptance Criteria:**
+  - [x] Root pnpm workspace manages all packages cleanly.
+  - [x] Turborepo pipeline executes typecheck, build, test, and lint across the monorepo.
+- **Verification:** `pnpm turbo build` and `pnpm turbo typecheck` succeed.
+
+### Task 1.2 — Code Quality & Linting
+
+- **Status:** `DONE`
+- **Purpose:** Enforce strict linting, formatting, boundary isolation, and zero circular dependencies.
+- **Dependencies:** Task 1.1.
+- **Subtasks:**
+  - [x] Subtask 1.2.1 — Configure ESLint with TypeScript strict parser and React hooks rules.
+  - [x] Subtask 1.2.2 — Configure Prettier with consistent formatting rules.
+  - [x] Subtask 1.2.3 — Configure strict package boundary validation.
+- **Acceptance Criteria:**
+  - [x] Linting runs across all packages without errors.
+- **Verification:** `pnpm lint` and `pnpm format:check` pass.
+
+### Task 1.3 — Testing Infrastructure
+
+- **Status:** `DONE`
+- **Purpose:** Establish unified unit, DOM, and browser test harnesses.
+- **Dependencies:** Task 1.1.
+- **Subtasks:**
+  - [x] Subtask 1.3.1 — Configure Vitest root and package-level test configs with jsdom.
+  - [x] Subtask 1.3.2 — Configure React Testing Library and custom assertions.
+  - [x] Subtask 1.3.3 — Configure Playwright for browser testing (Chromium, Firefox, WebKit).
+- **Acceptance Criteria:**
+  - [x] Unit test runner executes cleanly across workspace packages.
+- **Verification:** `pnpm test` runs and passes baseline tests.
+
+### Task 1.4 — Storybook & StyleX Integration
+
+- **Status:** `DONE`
+- **Purpose:** Set up Storybook 8+ with StyleX build plugin, theme switching, and accessibility addons.
+- **Dependencies:** Task 1.1, Task 1.2.
+- **Subtasks:**
+  - [x] Subtask 1.4.1 — Configure Storybook application in `apps/storybook` or `.storybook`.
+  - [x] Subtask 1.4.2 — Integrate StyleX Vite/Rollup compilation in Storybook.
+  - [x] Subtask 1.4.3 — Configure Storybook a11y addon (`@storybook/addon-a11y`).
+- **Acceptance Criteria:**
+  - [x] Storybook builds and preview renders with StyleX styling support.
+- **Verification:** `pnpm storybook:build` succeeds.
+
+### Task 1.5 — Release Tooling & GitHub Actions
+
+- **Status:** `DONE`
+- **Purpose:** Configure automated versioning, changelog generation, and CI validation.
+- **Dependencies:** Task 1.1–1.4.
+- **Subtasks:**
+  - [x] Subtask 1.5.1 — Configure Changesets (`.changeset/config.json`).
+  - [x] Subtask 1.5.2 — Create GitHub Actions CI workflow (`.github/workflows/ci.yml`) for lint, test, typecheck, build, and a11y.
+  - [x] Subtask 1.5.3 — Configure npm package publishing dry run.
+- **Acceptance Criteria:**
+  - [x] Changeset CLI is functional; dry-run release passes.
+- **Verification:** `pnpm changeset status` and CI workflow syntax validation.
 
 ---
 
 ## Phase 2 — Design Token Foundation
 
-- **Status:** `TODO`
+- **Status:** `DONE`
+
+### Task 2.1 — Primitive Tokens
+
+- **Status:** `DONE`
+- **Purpose:** Define portable primitive token scales according to DTCG standard.
 - **Dependencies:** Phase 1 complete.
-- **Tasks:**
-  - Task 2.1 — Primitive Tokens (Color, spacing, radius, typography, motion, elevation)
-  - Task 2.2 — Semantic Tokens (Backgrounds, foregrounds, borders, actions, feedback, focus)
-  - Task 2.3 — DTCG Schema Definition & Validation Rules
-  - Task 2.4 — Token Test Suite (Schema validation, alias resolution, circular check)
+- **Subtasks:**
+  - [x] Subtask 2.1.1 — Color scales (`color.neutral`, `blue`, `green`, `red`, `orange`, `yellow`, `purple` from 50 to 950).
+  - [x] Subtask 2.1.2 — Spacing scale (`space.0` through `space.16`).
+  - [x] Subtask 2.1.3 — Radius scale (`radius.none`, `xs`, `sm`, `md`, `lg`, `xl`, `full`).
+  - [x] Subtask 2.1.4 — Typography scales (families, sizes, weights, line heights, letter spacings).
+  - [x] Subtask 2.1.5 — Foundation scales (shadows, opacity, border widths, easing curves, motion durations, breakpoints, z-index layers).
+- **Acceptance Criteria:**
+  - [x] All primitive tokens conform to DTCG specification with `$value`, `$type`, `$description`.
+- **Verification:** Token schema validation passes.
+
+### Task 2.2 — Semantic Tokens
+
+- **Status:** `DONE`
+- **Purpose:** Define context-aware semantic tokens abstracting visual intents.
+- **Dependencies:** Task 2.1.
+- **Subtasks:**
+  - [x] Subtask 2.2.1 — Background tokens (`background.canvas`, `surface`, `surfaceRaised`, `brand`, `brandSubtle`, `disabled`).
+  - [x] Subtask 2.2.2 — Foreground tokens (`foreground.primary`, `secondary`, `tertiary`, `muted`, `disabled`, `inverse`, `brand`).
+  - [x] Subtask 2.2.3 — Border tokens (`border.default`, `subtle`, `strong`, `focus`).
+  - [x] Subtask 2.2.4 — Action state tokens (`action.primary.*`, `action.secondary.*`, hover, active, disabled).
+  - [x] Subtask 2.2.5 — Feedback tone tokens (`feedback.success`, `warning`, `danger`, `info`).
+  - [x] Subtask 2.2.6 — Focus ring tokens (`focus.ring`, `focus.offset`).
+- **Acceptance Criteria:**
+  - [x] Semantic tokens reference primitive tokens via standard DTCG aliases (`{color.blue.600}`).
+- **Verification:** Alias resolution test verifies all references.
+
+### Task 2.3 — DTCG Schema & TypeScript Types
+
+- **Status:** `DONE`
+- **Purpose:** Define strongly-typed Zod schemas and TypeScript interfaces for DTCG tokens.
+- **Dependencies:** Task 2.1, Task 2.2.
+- **Subtasks:**
+  - [x] Subtask 2.3.1 — Author DTCG token TypeScript interfaces in `@pine-ui/tokens`.
+  - [x] Subtask 2.3.2 — Author Zod validation schemas for all token types.
+  - [x] Subtask 2.3.3 — Author DTCG token JSON source files.
+- **Acceptance Criteria:**
+  - [x] TypeScript types and Zod schemas enforce type safety across all token files.
+- **Verification:** `pnpm typecheck` and Zod validation pass.
+
+### Task 2.4 — Token Test Suite
+
+- **Status:** `DONE`
+- **Purpose:** Guarantee zero broken aliases, zero circular references, and strict schema compliance.
+- **Dependencies:** Task 2.1–2.3.
+- **Subtasks:**
+  - [x] Subtask 2.4.1 — Unit tests validating DTCG JSON files against Zod schemas.
+  - [x] Subtask 2.4.2 — Unit tests verifying reference resolution and alias graph integrity.
+  - [x] Subtask 2.4.3 — Circular alias detection tests.
+  - [x] Subtask 2.4.4 — Duplicate token name tests.
+- **Acceptance Criteria:**
+  - [x] All token tests pass with 100% coverage of token definitions.
+- **Verification:** `pnpm test` passes.
 
 ---
 

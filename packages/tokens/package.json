@@ -1,0 +1,33 @@
+{
+  "name": "@pine-ui/tokens",
+  "version": "0.0.1",
+  "description": "DTCG-compliant portable design tokens for Pine UI",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./json/*": "./src/*.json"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "tsc --build",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@pine-ui/tsconfig": "workspace:*"
+  },
+  "sideEffects": false
+}

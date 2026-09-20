@@ -1,0 +1,111 @@
+{
+  "background": {
+    "$type": "color",
+    "canvas": { "$value": "{color.neutral.50}", "$description": "Page canvas background" },
+    "surface": { "$value": "{color.neutral.0}", "$description": "Card / panel surface" },
+    "surfaceRaised": {
+      "$value": "{color.neutral.0}",
+      "$description": "Elevated modal/dropdown surface"
+    },
+    "surfaceSubtle": {
+      "$value": "{color.neutral.100}",
+      "$description": "Subtle surface container"
+    },
+    "surfaceMuted": { "$value": "{color.neutral.200}", "$description": "Muted background" },
+    "surfaceDisabled": {
+      "$value": "{color.neutral.100}",
+      "$description": "Disabled container background"
+    },
+    "brand": { "$value": "{color.blue.600}", "$description": "Brand primary solid fill" },
+    "brandSubtle": { "$value": "{color.blue.50}", "$description": "Brand subtle tinted fill" },
+    "brandHover": { "$value": "{color.blue.700}", "$description": "Brand interactive hover" },
+    "brandActive": { "$value": "{color.blue.800}", "$description": "Brand interactive active" }
+  },
+  "foreground": {
+    "$type": "color",
+    "primary": { "$value": "{color.neutral.900}", "$description": "High-emphasis text and icons" },
+    "secondary": { "$value": "{color.neutral.700}", "$description": "Medium-emphasis text" },
+    "tertiary": { "$value": "{color.neutral.500}", "$description": "Low-emphasis supporting text" },
+    "muted": { "$value": "{color.neutral.400}", "$description": "Placeholder and subtle text" },
+    "disabled": { "$value": "{color.neutral.300}", "$description": "Disabled text and icons" },
+    "inverse": {
+      "$value": "{color.neutral.0}",
+      "$description": "Text on dark or brand backgrounds"
+    },
+    "brand": { "$value": "{color.blue.600}", "$description": "Brand colored text" }
+  },
+  "border": {
+    "$type": "color",
+    "subtle": { "$value": "{color.neutral.100}", "$description": "Subtle dividers and separators" },
+    "default": { "$value": "{color.neutral.200}", "$description": "Standard container borders" },
+    "strong": { "$value": "{color.neutral.400}", "$description": "Emphasized interactive borders" },
+    "focus": { "$value": "{color.blue.600}", "$description": "Focused control border" },
+    "disabled": { "$value": "{color.neutral.200}", "$description": "Disabled element border" }
+  },
+  "action": {
+    "primary": {
+      "$type": "color",
+      "background": { "$value": "{color.blue.600}" },
+      "backgroundHover": { "$value": "{color.blue.700}" },
+      "backgroundActive": { "$value": "{color.blue.800}" },
+      "foreground": { "$value": "{color.neutral.0}" }
+    },
+    "secondary": {
+      "$type": "color",
+      "background": { "$value": "{color.neutral.0}" },
+      "backgroundHover": { "$value": "{color.neutral.50}" },
+      "backgroundActive": { "$value": "{color.neutral.100}" },
+      "foreground": { "$value": "{color.neutral.900}" },
+      "border": { "$value": "{color.neutral.300}" }
+    },
+    "subtle": {
+      "$type": "color",
+      "background": { "$value": "transparent" },
+      "backgroundHover": { "$value": "{color.neutral.100}" },
+      "backgroundActive": { "$value": "{color.neutral.200}" },
+      "foreground": { "$value": "{color.neutral.700}" }
+    },
+    "danger": {
+      "$type": "color",
+      "background": { "$value": "{color.red.600}" },
+      "backgroundHover": { "$value": "{color.red.700}" },
+      "backgroundActive": { "$value": "{color.red.800}" },
+      "foreground": { "$value": "{color.neutral.0}" }
+    }
+  },
+  "feedback": {
+    "success": {
+      "$type": "color",
+      "background": { "$value": "{color.green.50}" },
+      "border": { "$value": "{color.green.200}" },
+      "foreground": { "$value": "{color.green.800}" },
+      "solid": { "$value": "{color.green.600}" }
+    },
+    "warning": {
+      "$type": "color",
+      "background": { "$value": "{color.yellow.50}" },
+      "border": { "$value": "{color.yellow.200}" },
+      "foreground": { "$value": "{color.yellow.800}" },
+      "solid": { "$value": "{color.yellow.600}" }
+    },
+    "danger": {
+      "$type": "color",
+      "background": { "$value": "{color.red.50}" },
+      "border": { "$value": "{color.red.200}" },
+      "foreground": { "$value": "{color.red.800}" },
+      "solid": { "$value": "{color.red.600}" }
+    },
+    "info": {
+      "$type": "color",
+      "background": { "$value": "{color.blue.50}" },
+      "border": { "$value": "{color.blue.200}" },
+      "foreground": { "$value": "{color.blue.800}" },
+      "solid": { "$value": "{color.blue.600}" }
+    }
+  },
+  "focus": {
+    "$type": "color",
+    "ring": { "$value": "{color.blue.600}", "$description": "Keyboard focus indicator color" },
+    "offset": { "$value": "{color.neutral.0}", "$description": "Focus ring offset outline" }
+  }
+}

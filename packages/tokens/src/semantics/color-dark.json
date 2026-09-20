@@ -1,0 +1,168 @@
+{
+  "background": {
+    "$type": "color",
+    "canvas": {
+      "$value": "{color.neutral.950}",
+      "$description": "Page canvas background in dark mode"
+    },
+    "surface": {
+      "$value": "{color.neutral.900}",
+      "$description": "Card / panel surface in dark mode"
+    },
+    "surfaceRaised": {
+      "$value": "{color.neutral.800}",
+      "$description": "Elevated modal/dropdown surface in dark mode"
+    },
+    "surfaceSubtle": {
+      "$value": "{color.neutral.800}",
+      "$description": "Subtle surface container in dark mode"
+    },
+    "surfaceMuted": {
+      "$value": "{color.neutral.700}",
+      "$description": "Muted background in dark mode"
+    },
+    "surfaceDisabled": {
+      "$value": "{color.neutral.800}",
+      "$description": "Disabled container background in dark mode"
+    },
+    "brand": {
+      "$value": "{color.blue.500}",
+      "$description": "Brand primary solid fill in dark mode"
+    },
+    "brandSubtle": {
+      "$value": "{color.blue.950}",
+      "$description": "Brand subtle tinted fill in dark mode"
+    },
+    "brandHover": {
+      "$value": "{color.blue.400}",
+      "$description": "Brand interactive hover in dark mode"
+    },
+    "brandActive": {
+      "$value": "{color.blue.300}",
+      "$description": "Brand interactive active in dark mode"
+    }
+  },
+  "foreground": {
+    "$type": "color",
+    "primary": {
+      "$value": "{color.neutral.50}",
+      "$description": "High-emphasis text and icons in dark mode"
+    },
+    "secondary": {
+      "$value": "{color.neutral.300}",
+      "$description": "Medium-emphasis text in dark mode"
+    },
+    "tertiary": {
+      "$value": "{color.neutral.400}",
+      "$description": "Low-emphasis supporting text in dark mode"
+    },
+    "muted": {
+      "$value": "{color.neutral.500}",
+      "$description": "Placeholder and subtle text in dark mode"
+    },
+    "disabled": {
+      "$value": "{color.neutral.600}",
+      "$description": "Disabled text and icons in dark mode"
+    },
+    "inverse": {
+      "$value": "{color.neutral.900}",
+      "$description": "Text on light or inverse backgrounds"
+    },
+    "brand": { "$value": "{color.blue.400}", "$description": "Brand colored text in dark mode" }
+  },
+  "border": {
+    "$type": "color",
+    "subtle": {
+      "$value": "{color.neutral.800}",
+      "$description": "Subtle dividers and separators in dark mode"
+    },
+    "default": {
+      "$value": "{color.neutral.700}",
+      "$description": "Standard container borders in dark mode"
+    },
+    "strong": {
+      "$value": "{color.neutral.500}",
+      "$description": "Emphasized interactive borders in dark mode"
+    },
+    "focus": {
+      "$value": "{color.blue.400}",
+      "$description": "Focused control border in dark mode"
+    },
+    "disabled": {
+      "$value": "{color.neutral.800}",
+      "$description": "Disabled element border in dark mode"
+    }
+  },
+  "action": {
+    "primary": {
+      "$type": "color",
+      "background": { "$value": "{color.blue.500}" },
+      "backgroundHover": { "$value": "{color.blue.400}" },
+      "backgroundActive": { "$value": "{color.blue.300}" },
+      "foreground": { "$value": "{color.neutral.950}" }
+    },
+    "secondary": {
+      "$type": "color",
+      "background": { "$value": "{color.neutral.900}" },
+      "backgroundHover": { "$value": "{color.neutral.800}" },
+      "backgroundActive": { "$value": "{color.neutral.700}" },
+      "foreground": { "$value": "{color.neutral.50}" },
+      "border": { "$value": "{color.neutral.700}" }
+    },
+    "subtle": {
+      "$type": "color",
+      "background": { "$value": "transparent" },
+      "backgroundHover": { "$value": "{color.neutral.800}" },
+      "backgroundActive": { "$value": "{color.neutral.700}" },
+      "foreground": { "$value": "{color.neutral.300}" }
+    },
+    "danger": {
+      "$type": "color",
+      "background": { "$value": "{color.red.500}" },
+      "backgroundHover": { "$value": "{color.red.400}" },
+      "backgroundActive": { "$value": "{color.red.300}" },
+      "foreground": { "$value": "{color.neutral.950}" }
+    }
+  },
+  "feedback": {
+    "success": {
+      "$type": "color",
+      "background": { "$value": "{color.green.950}" },
+      "border": { "$value": "{color.green.800}" },
+      "foreground": { "$value": "{color.green.200}" },
+      "solid": { "$value": "{color.green.500}" }
+    },
+    "warning": {
+      "$type": "color",
+      "background": { "$value": "{color.yellow.950}" },
+      "border": { "$value": "{color.yellow.800}" },
+      "foreground": { "$value": "{color.yellow.200}" },
+      "solid": { "$value": "{color.yellow.500}" }
+    },
+    "danger": {
+      "$type": "color",
+      "background": { "$value": "{color.red.950}" },
+      "border": { "$value": "{color.red.800}" },
+      "foreground": { "$value": "{color.red.200}" },
+      "solid": { "$value": "{color.red.500}" }
+    },
+    "info": {
+      "$type": "color",
+      "background": { "$value": "{color.blue.950}" },
+      "border": { "$value": "{color.blue.800}" },
+      "foreground": { "$value": "{color.blue.200}" },
+      "solid": { "$value": "{color.blue.500}" }
+    }
+  },
+  "focus": {
+    "$type": "color",
+    "ring": {
+      "$value": "{color.blue.400}",
+      "$description": "Keyboard focus indicator color in dark mode"
+    },
+    "offset": {
+      "$value": "{color.neutral.950}",
+      "$description": "Focus ring offset outline in dark mode"
+    }
+  }
+}

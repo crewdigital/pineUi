@@ -1,0 +1,28 @@
+{
+  "density": {
+    "compact": {
+      "space": {
+        "paddingInline": { "$value": "{space.2}" },
+        "paddingBlock": { "$value": "{space.1}" },
+        "gap": { "$value": "{space.1}" },
+        "controlHeight": { "$value": "32px" }
+      }
+    },
+    "default": {
+      "space": {
+        "paddingInline": { "$value": "{space.4}" },
+        "paddingBlock": { "$value": "{space.2}" },
+        "gap": { "$value": "{space.2}" },
+        "controlHeight": { "$value": "40px" }
+      }
+    },
+    "comfortable": {
+      "space": {
+        "paddingInline": { "$value": "{space.5}" },
+        "paddingBlock": { "$value": "{space.3}" },
+        "gap": { "$value": "{space.3}" },
+        "controlHeight": { "$value": "48px" }
+      }
+    }
+  }
+}

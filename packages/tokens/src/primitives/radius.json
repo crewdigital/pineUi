@@ -1,0 +1,13 @@
+{
+  "radius": {
+    "$type": "dimension",
+    "none": { "$value": "0px", "$description": "No border radius" },
+    "xs": { "$value": "2px", "$description": "2px extra small radius" },
+    "sm": { "$value": "4px", "$description": "4px small radius" },
+    "md": { "$value": "6px", "$description": "6px medium radius" },
+    "lg": { "$value": "8px", "$description": "8px large radius" },
+    "xl": { "$value": "12px", "$description": "12px extra large radius" },
+    "2xl": { "$value": "16px", "$description": "16px 2x large radius" },
+    "full": { "$value": "9999px", "$description": "Full pill/circle radius" }
+  }
+}
