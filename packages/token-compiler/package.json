@@ -19,9 +19,11 @@
     "build": "tsc --build",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
-    "test": "vitest run"
+    "test": "vitest run",
+    "compile-tokens": "node ./dist/cli.js"
   },
   "dependencies": {
+    "@pine-ui/tokens": "workspace:*",
     "zod": "^3.24.2"
   },
   "devDependencies": {

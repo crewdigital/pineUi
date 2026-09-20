@@ -222,26 +222,84 @@ This document serves as the single source of truth for the execution, status, an
 
 ## Phase 3 — Token Compiler
 
-- **Status:** `TODO`
+- **Status:** `DONE`
+
+### Task 3.1 — Compiler Core Architecture
+
+- **Status:** `DONE`
+- **Purpose:** Build AST parser, alias graph resolver, cycle detector, and target output adapters.
 - **Dependencies:** Phase 2 complete.
-- **Tasks:**
-  - Task 3.1 — Compiler Core Architecture (Parser, AST, resolver)
-  - Task 3.2 — StyleX Variable & Constant Code Generator
-  - Task 3.3 — CSS Custom Property & Theme Generator
-  - Task 3.4 — Documentation & Metadata Generator
-  - Task 3.5 — Deterministic Compiler Test Suite
+- **Subtasks:**
+  - [x] Subtask 3.1.1 — AST parser & JSON loader validating DTCG files via Zod schemas.
+  - [x] Subtask 3.1.2 — Recursive reference resolver with cycle detection and topological sorting.
+  - [x] Subtask 3.1.3 — Extensible output adapter architecture.
+- **Acceptance Criteria:**
+  - [x] Compiler resolves all primitive and semantic tokens into flat and structured AST representations.
+- **Verification:** Unit tests for parser and reference resolver pass.
+
+### Task 3.2 — StyleX Variable & Constant Code Generator
+
+- **Status:** `DONE`
+- **Purpose:** Deterministically generate typed StyleX variables (`stylex.defineVars`) and constants.
+- **Dependencies:** Task 3.1.
+- **Subtasks:**
+  - [x] Subtask 3.2.1 — Generate `vars.stylex.ts` defining atomic contracts for colors, spaces, radii, and typography.
+  - [x] Subtask 3.2.2 — Generate `tokens.ts` exporting strongly typed constant accessors.
+  - [x] Subtask 3.2.3 — Guarantee strict TypeScript compilation and exact declaration output.
+- **Acceptance Criteria:**
+  - [x] Generated `vars.stylex.ts` compiles without type errors and requires zero manual editing.
+- **Verification:** `pnpm typecheck` in `@pine-ui/stylex` succeeds.
+
+### Task 3.3 — CSS Custom Property & Theme Generator
+
+- **Status:** `DONE`
+- **Purpose:** Deterministically generate CSS custom property stylesheets for light, dark, and high-contrast modes.
+- **Dependencies:** Task 3.1.
+- **Subtasks:**
+  - [x] Subtask 3.3.1 — Generate `:root` base custom properties (primitives, light semantics, density).
+  - [x] Subtask 3.3.2 — Generate `[data-scheme="dark"]` and `[data-scheme="high-contrast"]` CSS overrides.
+  - [x] Subtask 3.3.3 — Generate `[data-density="..."]` CSS overrides.
+- **Acceptance Criteria:**
+  - [x] Generated CSS files accurately reflect all token values and variable mappings.
+- **Verification:** CSS output snapshot tests pass.
+
+### Task 3.4 — Documentation & Metadata Generator
+
+- **Status:** `DONE`
+- **Purpose:** Output structured token metadata and markdown documentation tables for the docs platform.
+- **Dependencies:** Task 3.1.
+- **Subtasks:**
+  - [x] Subtask 3.4.1 — Output JSON token metadata dictionary.
+  - [x] Subtask 3.4.2 — Generate markdown reference tables for documentation.
+- **Acceptance Criteria:**
+  - [x] Generated metadata includes token name, value, resolved value, and description.
+- **Verification:** Metadata structure verified by tests.
+
+### Task 3.5 — Deterministic Compiler Test Suite
+
+- **Status:** `DONE`
+- **Purpose:** Comprehensive test coverage for compiler idempotency, snapshots, error reporting, and CLI.
+- **Dependencies:** Task 3.1–3.4.
+- **Subtasks:**
+  - [x] Subtask 3.5.1 — Snapshot tests for StyleX, CSS, and metadata output.
+  - [x] Subtask 3.5.2 — Error handling tests for malformed tokens and broken references.
+  - [x] Subtask 3.5.3 — CLI runner tests (`pine-tokens compile`).
+- **Acceptance Criteria:**
+  - [x] 100% test pass rate for all compiler modules.
+- **Verification:** `pnpm test` in `@pine-ui/token-compiler` passes.
 
 ---
 
 ## Phase 4 — Theme Engine
 
-- **Status:** `TODO`
+- **Status:** `DONE`
 - **Dependencies:** Phase 3 complete.
 - **Tasks:**
-  - Task 4.1 — Base Themes (Light, Dark, High-Contrast)
-  - Task 4.2 — Multi-Dimensional Theme Composition (Brand, Scheme, Density, Motion)
-  - Task 4.3 — StyleX `createTheme` Integration & Nested Theme Support
-  - Task 4.4 — Performance Verification (No context rerenders during theme switches)
+  - [x] Task 4.1 — Base Themes (Light, Dark, High-Contrast)
+  - [x] Task 4.2 — Multi-Dimensional Theme Composition (Brand, Scheme, Density, Motion, Direction)
+  - [x] Task 4.3 — StyleX `createTheme` Integration & Nested Theme Support
+  - [x] Task 4.4 — Performance Verification (Zero React Context re-renders on theme switches via DOM data-attributes cascade)
+
 
 ---
 

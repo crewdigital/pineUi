@@ -1,1 +1,1 @@
-{"root":["./src/cli.ts","./src/index.ts"],"version":"5.9.3"}
+{"root":["./src/cli.ts","./src/compiler.ts","./src/index.test.ts","./src/index.ts","./src/resolver.ts","./src/types.ts","./src/generators/css.ts","./src/generators/docs.ts","./src/generators/stylex.ts"],"version":"5.9.3"}

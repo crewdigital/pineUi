@@ -1,14 +1,13 @@
 #!/usr/bin/env node
-import { compileTokens } from './index.js';
+import { compileTokens } from './compiler.js';
 
-async function run(): Promise<void> {
-  await compileTokens({
-    sourceDir: './packages/tokens/src',
-    outputDir: './packages/stylex/src',
-  });
+async function main(): Promise<void> {
+  console.log('🚀 Compiling Pine UI DTCG Design Tokens...');
+  await compileTokens();
+  console.log('✅ Tokens compiled successfully to @pine-ui/stylex and @pine-ui/themes!');
 }
 
-run().catch((error) => {
-  console.error('Compiler error:', error);
+main().catch((err) => {
+  console.error('❌ Token compiler failed:', err);
   process.exit(1);
 });

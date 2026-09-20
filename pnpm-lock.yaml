@@ -14,6 +14,9 @@ importers:
       '@eslint/js':
         specifier: ^9.21.0
         version: 9.39.5
+      '@pine-ui/build-config':
+        specifier: workspace:*
+        version: link:tooling/build
       '@types/node':
         specifier: ^20.17.19
         version: 20.19.43
@@ -221,12 +224,18 @@ importers:
         specifier: ^0.10.0
         version: 0.10.1
     devDependencies:
+      '@pine-ui/testing':
+        specifier: workspace:*
+        version: link:../testing
       '@pine-ui/tsconfig':
         specifier: workspace:*
         version: link:../../tooling/typescript
 
   packages/token-compiler:
     dependencies:
+      '@pine-ui/tokens':
+        specifier: workspace:*
+        version: link:../tokens
       zod:
         specifier: ^3.24.2
         version: 3.25.76

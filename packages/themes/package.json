@@ -19,13 +19,15 @@
   "scripts": {
     "build": "tsc --build",
     "typecheck": "tsc --noEmit",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "test": "vitest run"
   },
   "dependencies": {
     "@pine-ui/stylex": "workspace:*",
     "@stylexjs/stylex": "^0.10.0"
   },
   "devDependencies": {
+    "@pine-ui/testing": "workspace:*",
     "@pine-ui/tsconfig": "workspace:*"
   },
   "sideEffects": [

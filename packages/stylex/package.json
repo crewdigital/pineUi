@@ -15,6 +15,10 @@
       "types": "./dist/vars.stylex.d.ts",
       "import": "./dist/vars.stylex.js"
     },
+    "./vars.stylex": {
+      "types": "./dist/vars.stylex.d.ts",
+      "import": "./dist/vars.stylex.js"
+    },
     "./tokens": {
       "types": "./dist/tokens.d.ts",
       "import": "./dist/tokens.js"
