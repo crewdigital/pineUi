@@ -305,21 +305,21 @@ This document serves as the single source of truth for the execution, status, an
 
 ## Phase 5 — Foundational Primitives (Level 1 Static)
 
-- **Status:** `TODO`
+- **Status:** `DONE`
 - **Dependencies:** Phase 4 complete.
 - **Components to implement sequentially:**
-  - 5.1 Box
-  - 5.2 Stack
-  - 5.3 Inline
-  - 5.4 Cluster
-  - 5.5 Grid
-  - 5.6 Container
-  - 5.7 Surface
-  - 5.8 Text
-  - 5.9 Heading
-  - 5.10 Separator
-  - 5.11 VisuallyHidden
-  - 5.12 FocusRing
+  - [x] 5.1 Box
+  - [x] 5.2 Stack
+  - [x] 5.3 Inline
+  - [x] 5.4 Cluster
+  - [x] 5.5 Grid
+  - [x] 5.6 Container
+  - [x] 5.7 Surface
+  - [x] 5.8 Text
+  - [x] 5.9 Heading
+  - [x] 5.10 Separator
+  - [x] 5.11 VisuallyHidden
+  - [x] 5.12 FocusRing
 
 ---
 
