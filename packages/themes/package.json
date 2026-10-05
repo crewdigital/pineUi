@@ -11,13 +11,15 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
-    "./css/*": "./dist/css/*"
+    "./css": "./src/css/index.css",
+    "./css/*": "./src/css/*"
   },
   "files": [
-    "dist"
+    "dist",
+    "src/css"
   ],
   "scripts": {
-    "build": "tsc --build",
+    "build": "tsc --build && mkdir -p dist/css && cp -r src/css/* dist/css/",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "test": "vitest run"

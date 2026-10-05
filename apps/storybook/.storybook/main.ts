@@ -16,6 +16,7 @@ const config: StorybookConfig = {
     viteConfig.plugins = viteConfig.plugins || [];
     const stylexPlugin = createStyleXPlugin({ dev: true }) as unknown as PluginOption;
     viteConfig.plugins.push(stylexPlugin);
+    viteConfig.base = process.env.STORYBOOK_BASE_HREF || './';
     return viteConfig;
   },
 };
