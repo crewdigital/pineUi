@@ -99,9 +99,9 @@ export type TextProps<T extends React.ElementType = 'p'> = BaseTextProps & {
   as?: T | undefined;
 } & Omit<React.ComponentPropsWithoutRef<T>, keyof BaseTextProps | 'as'>;
 
-type TextComponent = <T extends React.ElementType = 'p'>(
+type TextComponent = (<T extends React.ElementType = 'p'>(
   props: TextProps<T> & { ref?: React.ComponentPropsWithRef<T>['ref'] }
-) => React.ReactElement | null;
+) => React.ReactElement | null) & { displayName?: string };
 
 // ─── Component ──────────────────────────────────────────────────────────────
 

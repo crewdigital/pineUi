@@ -74,7 +74,7 @@ export interface BaseSurfaceProps {
   shadow?: ShadowScale | undefined;
   /** Border radius. */
   borderRadius?: RadiusScale | undefined;
-  style?: stylex.StyleXStyles | undefined;
+  style?: any;
   className?: string | undefined;
   children?: React.ReactNode | undefined;
 }
@@ -105,13 +105,20 @@ export const Surface: SurfaceComponent = React.forwardRef(function Surface<
 ) {
   const Component = as ?? 'div';
 
+  const isPlainStyle =
+    customStyle &&
+    typeof customStyle === 'object' &&
+    !('$$css' in (customStyle as Record<string, unknown>));
+  const stylexCustom = isPlainStyle ? undefined : customStyle;
+  const inlineCustom = isPlainStyle ? (customStyle as React.CSSProperties) : undefined;
+
   const stylexProps = stylex.props(
     styles.base,
     styles[`variant_${variant}` as keyof typeof styles],
     bordered && styles.bordered,
     shadow !== undefined && styles[`shadow_${shadow}` as keyof typeof styles],
     borderRadius !== undefined && styles[`rad_${borderRadius}` as keyof typeof styles],
-    customStyle
+    stylexCustom
   );
 
   const mergedClassName = className
@@ -124,7 +131,7 @@ export const Surface: SurfaceComponent = React.forwardRef(function Surface<
       ref,
       ...restProps,
       className: mergedClassName,
-      style: { ...stylexProps.style, ...(restProps as { style?: React.CSSProperties }).style },
+      style: { ...stylexProps.style, ...inlineCustom },
     },
     children
   );

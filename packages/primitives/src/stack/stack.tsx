@@ -45,7 +45,7 @@ export interface BaseStackProps {
   gap?: SpaceScale | undefined;
   align?: AlignItems | undefined;
   justify?: JustifyContent | undefined;
-  style?: stylex.StyleXStyles | undefined;
+  style?: any;
   className?: string | undefined;
   children?: React.ReactNode | undefined;
 }
@@ -75,12 +75,19 @@ export const Stack: StackComponent = React.forwardRef(function Stack<
 ) {
   const Component = as ?? 'div';
 
+  const isPlainStyle =
+    customStyle &&
+    typeof customStyle === 'object' &&
+    !('$$css' in (customStyle as Record<string, unknown>));
+  const stylexCustom = isPlainStyle ? undefined : customStyle;
+  const inlineCustom = isPlainStyle ? (customStyle as React.CSSProperties) : undefined;
+
   const stylexProps = stylex.props(
     styles.base,
     gap !== undefined && styles[`gap_${gap}` as keyof typeof styles],
     align !== undefined && styles[`align_${align}` as keyof typeof styles],
     justify !== undefined && styles[`justify_${justify}` as keyof typeof styles],
-    customStyle
+    stylexCustom
   );
 
   const mergedClassName = className
@@ -93,7 +100,7 @@ export const Stack: StackComponent = React.forwardRef(function Stack<
       ref,
       ...restProps,
       className: mergedClassName,
-      style: { ...stylexProps.style, ...(restProps as { style?: React.CSSProperties }).style },
+      style: { ...stylexProps.style, ...inlineCustom },
     },
     children
   );

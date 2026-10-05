@@ -143,7 +143,7 @@ export interface BaseBoxProps {
   overflow?: OverflowValue | undefined;
   borderRadius?: RadiusScale | undefined;
   borderWidth?: BorderWidthScale | undefined;
-  style?: stylex.StyleXStyles | undefined;
+  style?: any;
   className?: string | undefined;
   children?: React.ReactNode | undefined;
 }
@@ -179,6 +179,13 @@ export const Box: BoxComponent = React.forwardRef(function Box<T extends React.E
 ) {
   const Component = as ?? 'div';
 
+  const isPlainStyle =
+    customStyle &&
+    typeof customStyle === 'object' &&
+    !('$$css' in (customStyle as Record<string, unknown>));
+  const stylexCustom = isPlainStyle ? undefined : customStyle;
+  const inlineCustom = isPlainStyle ? (customStyle as React.CSSProperties) : undefined;
+
   const stylexProps = stylex.props(
     styles.base,
     display === 'block' && styles.display_block,
@@ -213,7 +220,7 @@ export const Box: BoxComponent = React.forwardRef(function Box<T extends React.E
     borderRadius !== undefined && styles[`rad_${borderRadius}` as keyof typeof styles],
     borderWidth !== undefined && styles[`bw_${borderWidth}` as keyof typeof styles],
 
-    customStyle
+    stylexCustom
   );
 
   const mergedClassName = className
@@ -226,7 +233,7 @@ export const Box: BoxComponent = React.forwardRef(function Box<T extends React.E
       ref,
       ...restProps,
       className: mergedClassName,
-      style: { ...stylexProps.style, ...(restProps as { style?: React.CSSProperties }).style },
+      style: { ...stylexProps.style, ...inlineCustom },
     },
     children
   );
