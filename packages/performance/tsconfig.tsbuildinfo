@@ -1,1 +1,1 @@
-{"root":["./src/index.ts"],"version":"5.9.3"}
+{"root":["./src/benchmarks.test.tsx","./src/budgets.ts","./src/harness.test.tsx","./src/harness.ts","./src/index.ts","./src/tree-shaking.ts","./src/types.ts"],"version":"5.9.3"}
