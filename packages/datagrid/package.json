@@ -1,0 +1,37 @@
+{
+  "name": "@pine-ui/datagrid",
+  "version": "0.0.1",
+  "description": "Enterprise virtualized, sortable, accessible data grid component for Pine UI",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc --build",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run"
+  },
+  "peerDependencies": {
+    "react": "^18.3.0 || ^19.0.0"
+  },
+  "dependencies": {
+    "@pine-ui/virtual-list": "workspace:*"
+  },
+  "devDependencies": {
+    "@pine-ui/testing": "workspace:*",
+    "@pine-ui/tsconfig": "workspace:*",
+    "@types/react": "^18.3.18",
+    "react": "^18.3.1"
+  },
+  "sideEffects": false
+}
