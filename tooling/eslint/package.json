@@ -1,0 +1,32 @@
+{
+  "name": "@pine-ui/eslint-plugin",
+  "version": "0.0.1",
+  "description": "ESLint rules for enforcing Pine UI design system token contracts and logical properties",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc --build",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@pine-ui/tsconfig": "workspace:*",
+    "@types/node": "^20.17.19",
+    "eslint": "^9.21.0"
+  },
+  "peerDependencies": {
+    "eslint": ">=8.0.0"
+  },
+  "sideEffects": false
+}
