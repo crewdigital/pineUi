@@ -1,0 +1,52 @@
+name: Publish Packages
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'NPM distribution tag (e.g. latest, beta, next)'
+        required: true
+        default: 'latest'
+
+jobs:
+  publish:
+    name: Build & Publish to NPM
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 10.28.1
+          run_install: false
+
+      - name: Setup Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          registry-url: 'https://registry.npmjs.org'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build all packages in topological order
+        run: pnpm turbo build
+
+      - name: Typecheck validation
+        run: pnpm turbo typecheck
+
+      - name: Test verification
+        run: pnpm turbo test
+
+      - name: Publish packages to NPM
+        run: pnpm -r publish --access public --tag ${{ github.event.inputs.tag || 'latest' }} --no-git-checks
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
