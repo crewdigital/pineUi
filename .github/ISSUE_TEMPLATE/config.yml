@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: GitHub Discussions
+    url: https://github.com/crewdigital/pineui/discussions
+    about: Ask questions, share feedback, and discuss ideas with the community.
+  - name: Security Disclosures
+    url: https://github.com/crewdigital/pineui/security/advisories
+    about: Report security vulnerabilities confidentially.

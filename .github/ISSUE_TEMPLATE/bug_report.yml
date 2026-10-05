@@ -1,0 +1,62 @@
+name: Bug Report
+description: Report a reproducible bug or defect in Pine UI
+title: '[Bug]: '
+labels: ['bug', 'triage']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting an issue! Please check existing issues to avoid duplicates.
+  - type: dropdown
+    id: package
+    attributes:
+      label: Affected Package / Area
+      description: Which package or component is causing the issue?
+      options:
+        - '@pine-ui/react'
+        - '@pine-ui/primitives'
+        - '@pine-ui/behaviors'
+        - '@pine-ui/icons'
+        - '@pine-ui/tokens'
+        - '@pine-ui/themes'
+        - '@pine-ui/stylex'
+        - '@pine-ui/accessibility'
+        - '@pine-ui/performance'
+        - '@pine-ui/eslint-plugin'
+        - Storybook / Documentation
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: A clear and concise description of what the bug is.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      description: Steps or a minimal CodeSandbox/StackBlitz reproduction link.
+      placeholder: |
+        1. Render `<Popover>` inside `<Dialog>`
+        2. Press 'Tab' to focus trigger
+        3. Press 'Space' to open
+        4. Focus is lost
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What did you expect to happen?
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment Info
+      description: Browser, OS, React version, Pine UI version.
+      placeholder: 'Chrome 122, macOS Sonoma, React 18.3.1, @pine-ui/react 0.0.1'
+    validations:
+      required: true
