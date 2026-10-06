@@ -4,6 +4,8 @@ import tsparser from '@typescript-eslint/parser';
 import reactPlugin from 'eslint-plugin-react';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
 
+import pinePlugin from './tooling/eslint/dist/index.js';
+
 export default [
   js.configs.recommended,
   {
@@ -22,6 +24,7 @@ export default [
       '@typescript-eslint': tseslint,
       react: reactPlugin,
       'react-hooks': reactHooksPlugin,
+      '@pine-ui': pinePlugin,
     },
     rules: {
       'no-unused-vars': 'off',
@@ -35,11 +38,18 @@ export default [
       'react/react-in-jsx-scope': 'off',
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
+      '@pine-ui/no-emoji-icons': 'error',
     },
     settings: {
       react: {
         version: 'detect',
       },
+    },
+  },
+  {
+    files: ['**/*.stories.{ts,tsx}', 'apps/storybook/.storybook/**/*.{ts,tsx}'],
+    rules: {
+      'react-hooks/rules-of-hooks': 'off',
     },
   },
   {

@@ -1,1 +1,1 @@
-{"root":["./src/index.ts","./src/rules.test.ts","./src/rules/no-raw-colors.ts","./src/rules/no-raw-spacing.ts","./src/rules/no-unsafe-style-override.ts","./src/rules/prefer-logical-properties.ts","./src/rules/prefer-semantic-token.ts"],"version":"5.9.3"}
+{"root":["./src/index.ts","./src/rules.test.ts","./src/rules/no-emoji-icons.ts","./src/rules/no-raw-colors.ts","./src/rules/no-raw-spacing.ts","./src/rules/no-unsafe-style-override.ts","./src/rules/prefer-logical-properties.ts","./src/rules/prefer-semantic-token.ts"],"version":"5.9.3"}

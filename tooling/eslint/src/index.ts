@@ -3,6 +3,7 @@ import { noRawSpacing } from './rules/no-raw-spacing.js';
 import { preferSemanticToken } from './rules/prefer-semantic-token.js';
 import { preferLogicalProperties } from './rules/prefer-logical-properties.js';
 import { noUnsafeStyleOverride } from './rules/no-unsafe-style-override.js';
+import { noEmojiIcons } from './rules/no-emoji-icons.js';
 
 export const rules = {
   'no-raw-colors': noRawColors,
@@ -10,6 +11,7 @@ export const rules = {
   'prefer-semantic-token': preferSemanticToken,
   'prefer-logical-properties': preferLogicalProperties,
   'no-unsafe-style-override': noUnsafeStyleOverride,
+  'no-emoji-icons': noEmojiIcons,
 };
 
 export const configs = {
@@ -25,6 +27,7 @@ export const configs = {
       '@pine-ui/prefer-semantic-token': 'warn',
       '@pine-ui/prefer-logical-properties': 'error',
       '@pine-ui/no-unsafe-style-override': 'error',
+      '@pine-ui/no-emoji-icons': 'error',
     },
   },
 };

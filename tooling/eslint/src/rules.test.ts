@@ -1,3 +1,4 @@
+/* eslint-disable @pine-ui/no-emoji-icons */
 import { describe, it } from 'vitest';
 import { RuleTester } from 'eslint';
 import { noRawColors } from './rules/no-raw-colors.js';
@@ -5,6 +6,7 @@ import { noRawSpacing } from './rules/no-raw-spacing.js';
 import { preferSemanticToken } from './rules/prefer-semantic-token.js';
 import { preferLogicalProperties } from './rules/prefer-logical-properties.js';
 import { noUnsafeStyleOverride } from './rules/no-unsafe-style-override.js';
+import { noEmojiIcons } from './rules/no-emoji-icons.js';
 
 const ruleTester = new RuleTester({
   languageOptions: {
@@ -116,6 +118,30 @@ describe('@pine-ui/eslint-plugin', () => {
         {
           code: "const styles = { color: 'red !important' };",
           errors: [{ messageId: 'noImportant' }],
+        },
+      ],
+    });
+  });
+
+  it('no-emoji-icons', () => {
+    ruleTester.run('no-emoji-icons', noEmojiIcons, {
+      valid: [
+        { code: "const label = 'Search';" },
+        { code: "const element = '<SearchIcon />';" },
+        { code: "const shortcut = 'Ctrl+K';" },
+      ],
+      invalid: [
+        {
+          code: "const icon = '🔍';",
+          errors: [{ messageId: 'noEmojiIcon' }],
+        },
+        {
+          code: "const button = '📅 Calendar';",
+          errors: [{ messageId: 'noEmojiIcon' }],
+        },
+        {
+          code: "const close = '✕';",
+          errors: [{ messageId: 'noEmojiIcon' }],
         },
       ],
     });
