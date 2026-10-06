@@ -1,5 +1,3 @@
-import type * as React from 'react';
-
 export interface BenchmarkOptions {
   /** Number of measurement iterations. Defaults to 10 */
   iterations?: number | undefined;
