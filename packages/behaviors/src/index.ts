@@ -11,3 +11,4 @@ export * from './aria-linking/index.js';
 export * from './focus-trap/index.js';
 export * from './portal/index.js';
 export * from './dismiss/index.js';
+export * from './direction/index.js';

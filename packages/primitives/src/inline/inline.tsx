@@ -44,7 +44,7 @@ export interface BaseInlineProps {
   gap?: SpaceScale | undefined;
   align?: AlignItems | undefined;
   justify?: JustifyContent | undefined;
-  style?: any;
+  style?: stylex.StyleXStyles | React.CSSProperties | undefined;
   className?: string | undefined;
   children?: React.ReactNode | undefined;
 }
@@ -78,7 +78,7 @@ export const Inline: InlineComponent = React.forwardRef(function Inline<
     customStyle &&
     typeof customStyle === 'object' &&
     !('$$css' in (customStyle as Record<string, unknown>));
-  const stylexCustom = isPlainStyle ? undefined : customStyle;
+  const stylexCustom = (isPlainStyle ? undefined : customStyle) as stylex.StyleXStyles | undefined;
   const inlineCustom = isPlainStyle ? (customStyle as React.CSSProperties) : undefined;
 
   const stylexProps = stylex.props(

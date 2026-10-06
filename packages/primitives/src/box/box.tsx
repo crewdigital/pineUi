@@ -143,7 +143,7 @@ export interface BaseBoxProps {
   overflow?: OverflowValue | undefined;
   borderRadius?: RadiusScale | undefined;
   borderWidth?: BorderWidthScale | undefined;
-  style?: any;
+  style?: stylex.StyleXStyles | React.CSSProperties | undefined;
   className?: string | undefined;
   children?: React.ReactNode | undefined;
 }
@@ -183,7 +183,7 @@ export const Box: BoxComponent = React.forwardRef(function Box<T extends React.E
     customStyle &&
     typeof customStyle === 'object' &&
     !('$$css' in (customStyle as Record<string, unknown>));
-  const stylexCustom = isPlainStyle ? undefined : customStyle;
+  const stylexCustom = (isPlainStyle ? undefined : customStyle) as stylex.StyleXStyles | undefined;
   const inlineCustom = isPlainStyle ? (customStyle as React.CSSProperties) : undefined;
 
   const stylexProps = stylex.props(

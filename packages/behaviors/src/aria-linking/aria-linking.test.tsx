@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { renderHook } from '@pine-ui/testing';
 import { describe, it, expect } from 'vitest';
 import { useStableId, combineAriaIds } from './aria-linking.js';

@@ -74,7 +74,7 @@ export interface BaseSurfaceProps {
   shadow?: ShadowScale | undefined;
   /** Border radius. */
   borderRadius?: RadiusScale | undefined;
-  style?: any;
+  style?: stylex.StyleXStyles | React.CSSProperties | undefined;
   className?: string | undefined;
   children?: React.ReactNode | undefined;
 }
@@ -109,7 +109,7 @@ export const Surface: SurfaceComponent = React.forwardRef(function Surface<
     customStyle &&
     typeof customStyle === 'object' &&
     !('$$css' in (customStyle as Record<string, unknown>));
-  const stylexCustom = isPlainStyle ? undefined : customStyle;
+  const stylexCustom = (isPlainStyle ? undefined : customStyle) as stylex.StyleXStyles | undefined;
   const inlineCustom = isPlainStyle ? (customStyle as React.CSSProperties) : undefined;
 
   const stylexProps = stylex.props(

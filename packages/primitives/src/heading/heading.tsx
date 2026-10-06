@@ -95,7 +95,7 @@ export interface BaseHeadingProps {
   level: HeadingLevel;
   /**
    * Visual size, decoupled from semantic level.
-   * Defaults to an opinionated mapping (h1→4xl, h2→3xl, h3→2xl, h4→xl, h5→lg, h6→md).
+   * Defaults to an opinionated mapping (h1->4xl, h2->3xl, h3->2xl, h4->xl, h5->lg, h6->md).
    */
   size?: HeadingSize | undefined;
   /** Font weight. Defaults to 'bold'. */
@@ -122,7 +122,7 @@ export type HeadingProps = BaseHeadingProps &
  *
  * @accessibility
  * - Always choose the heading level that correctly reflects document hierarchy.
- * - Never skip levels (e.g., h1 → h3) for visual effect; use `size` instead.
+ * - Never skip levels (e.g., h1 -> h3) for visual effect; use `size` instead.
  * - One `<h1>` per page (or landmark region) is the WCAG/HTML5 best practice.
  *
  * @example

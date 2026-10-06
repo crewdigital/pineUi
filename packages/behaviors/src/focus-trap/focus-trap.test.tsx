@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { render, screen, fireEvent } from '@pine-ui/testing';
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { useFocusTrap } from './focus-trap.js';
 
 function TrapModal({ enabled = true }: { enabled?: boolean }) {

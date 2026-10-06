@@ -34,6 +34,10 @@
     "./dismiss": {
       "types": "./dist/dismiss/index.d.ts",
       "import": "./dist/dismiss/index.js"
+    },
+    "./direction": {
+      "types": "./dist/direction/index.d.ts",
+      "import": "./dist/direction/index.js"
     }
   },
   "files": [
