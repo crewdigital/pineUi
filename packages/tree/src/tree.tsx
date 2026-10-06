@@ -92,7 +92,7 @@ export function TreeView({
               alignItems: 'center',
               gap: '6px',
               padding: '6px 10px',
-              paddingLeft: `${depth * 16}px`,
+              paddingInlineStart: `${depth * 16}px`,
               borderRadius: '6px',
               cursor: 'pointer',
               userSelect: 'none',
@@ -104,19 +104,24 @@ export function TreeView({
             }}
           >
             {hasChildren ? (
-              <span
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
                 aria-hidden="true"
                 style={{
                   display: 'inline-block',
                   transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)',
                   transition: 'transform 0.15s ease',
-                  fontSize: '10px',
-                  width: '12px',
-                  textAlign: 'center',
                 }}
               >
-                ▶
-              </span>
+                <path d="m9 18 6-6-6-6" />
+              </svg>
             ) : (
               <span style={{ width: '12px' }} />
             )}

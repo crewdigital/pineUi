@@ -55,4 +55,45 @@ describe('@pine-ui/datepicker', () => {
     expect(selected.getMonth()).toBe(9);
     expect(selected.getFullYear()).toBe(2026);
   });
+
+  it('renders quick-select preset chips and applies them', () => {
+    const onRangeChange = vi.fn();
+    render(
+      <DatePicker
+        mode="range"
+        presets
+        onRangeChange={onRangeChange}
+      />
+    );
+
+    const toggleBtn = screen.getByRole('button', { name: 'Toggle calendar' });
+    fireEvent.click(toggleBtn);
+
+    const last7Btn = screen.getByRole('button', { name: 'Last 7 Days' });
+    expect(last7Btn).toBeDefined();
+
+    fireEvent.click(last7Btn);
+    expect(onRangeChange).toHaveBeenCalled();
+    const range = onRangeChange.mock.calls[0]?.[0];
+    expect(range.start).toBeDefined();
+    expect(range.end).toBeDefined();
+  });
+
+  it('renders dual-month calendars when months=2', () => {
+    render(
+      <DatePicker
+        defaultValue={new Date(2026, 9, 1)}
+        months={2}
+      />
+    );
+
+    const toggleBtn = screen.getByRole('button', { name: 'Toggle calendar' });
+    fireEvent.click(toggleBtn);
+
+    const grids = screen.getAllByRole('grid');
+    expect(grids.length).toBe(2);
+    expect(screen.getByText(/October 2026/i)).toBeDefined();
+    expect(screen.getByText(/November 2026/i)).toBeDefined();
+  });
 });
+

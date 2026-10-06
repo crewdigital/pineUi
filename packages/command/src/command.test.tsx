@@ -9,6 +9,8 @@ import {
   CommandGroup,
   CommandItem,
   CommandShortcut,
+  CommandLegend,
+  CommandRecent,
 } from './command.js';
 
 describe('@pine-ui/command', () => {
@@ -21,11 +23,11 @@ describe('@pine-ui/command', () => {
           <CommandGroup heading="Actions">
             <CommandItem value="new-file">
               <span>New File</span>
-              <CommandShortcut>⌘N</CommandShortcut>
+              <CommandShortcut>Ctrl+N</CommandShortcut>
             </CommandItem>
             <CommandItem value="copy-link">
               <span>Copy Link</span>
-              <CommandShortcut>⌘C</CommandShortcut>
+              <CommandShortcut>Ctrl+C</CommandShortcut>
             </CommandItem>
           </CommandGroup>
         </CommandList>
@@ -37,7 +39,7 @@ describe('@pine-ui/command', () => {
 
     expect(screen.getByText('New File')).toBeDefined();
     expect(screen.getByText('Copy Link')).toBeDefined();
-    expect(screen.getByText('⌘N')).toBeDefined();
+    expect(screen.getByText('Ctrl+N')).toBeDefined();
 
     await expectNoA11yViolations(container);
   });
@@ -81,5 +83,107 @@ describe('@pine-ui/command', () => {
     const item = screen.getByText('Deploy Application');
     fireEvent.click(item);
     expect(onSelect).toHaveBeenCalledTimes(1);
+  });
+
+  it('renders command legend with navigation hints', () => {
+    render(
+      <Command>
+        <CommandInput />
+        <CommandList>
+          <CommandItem>Documentation</CommandItem>
+        </CommandList>
+        <CommandLegend />
+      </Command>
+    );
+
+    expect(screen.getByTestId('command-legend')).toBeDefined();
+    expect(screen.getByText('Navigate')).toBeDefined();
+    expect(screen.getByText('Select')).toBeDefined();
+    expect(screen.getByText('Close')).toBeDefined();
+  });
+
+  it('persists selected items into CommandRecent', () => {
+    const key = 'test-command-recent';
+    window.localStorage.removeItem(key);
+
+    const { rerender } = render(
+      <Command recentStorageKey={key}>
+        <CommandInput />
+        <CommandList>
+          <CommandRecent heading="Recent Items" />
+          <CommandGroup heading="Actions">
+            <CommandItem value="open-settings">Open Settings</CommandItem>
+          </CommandGroup>
+        </CommandList>
+      </Command>
+    );
+
+    // Click item to add to recent
+    const item = screen.getByText('Open Settings');
+    fireEvent.click(item);
+
+    // Re-render and check recent items section
+    rerender(
+      <Command recentStorageKey={key}>
+        <CommandInput />
+        <CommandList>
+          <CommandRecent heading="Recent Items" />
+          <CommandGroup heading="Actions">
+            <CommandItem value="open-settings">Open Settings</CommandItem>
+          </CommandGroup>
+        </CommandList>
+      </Command>
+    );
+
+    expect(screen.getByText('Recent Items')).toBeDefined();
+    expect(screen.getByText('Recent')).toBeDefined();
+  });
+
+  it('renders CommandEmpty with suggestions when no matches are found', () => {
+    const onSuggestionSelect = vi.fn();
+    render(
+      <Command>
+        <CommandInput />
+        <CommandList>
+          <CommandEmpty
+            suggestions={['Billing', 'API Keys']}
+            onSuggestionSelect={onSuggestionSelect}
+          >
+            No matches found
+          </CommandEmpty>
+          <CommandItem value="settings">Settings</CommandItem>
+        </CommandList>
+      </Command>
+    );
+
+    const input = screen.getByRole('combobox');
+    fireEvent.change(input, { target: { value: 'zzzzzz' } });
+
+    expect(screen.getByText('No matches found')).toBeDefined();
+    const billingBtn = screen.getByRole('button', { name: 'Billing' });
+    expect(billingBtn).toBeDefined();
+
+    fireEvent.click(billingBtn);
+    expect(onSuggestionSelect).toHaveBeenCalledWith('Billing');
+  });
+
+  it('supports explicit RTL direction and logical layout alignment', () => {
+    const { container } = render(
+      <Command dir="rtl" aria-label="لوحة الأوامر">
+        <CommandInput placeholder="ابحث عن أمر..." />
+        <CommandList>
+          <CommandItem value="settings">
+            <span>الإعدادات</span>
+            <CommandShortcut>Ctrl+S</CommandShortcut>
+          </CommandItem>
+        </CommandList>
+      </Command>
+    );
+
+    const commandRoot = container.firstElementChild as HTMLElement;
+    expect(commandRoot.getAttribute('dir')).toBe('rtl');
+    expect(screen.getByText('الإعدادات')).toBeDefined();
+    const shortcut = screen.getByText('Ctrl+S');
+    expect(shortcut.style.marginInlineStart).toBe('auto');
   });
 });

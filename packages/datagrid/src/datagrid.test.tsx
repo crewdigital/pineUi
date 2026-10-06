@@ -83,4 +83,67 @@ describe('@pine-ui/datagrid', () => {
 
     expect(screen.getByText('No users in database')).toBeDefined();
   });
+
+  it('renders actionable empty state button and invokes onClick', () => {
+    const onAction = vi.fn();
+    render(
+      <DataGrid
+        data={[]}
+        columns={testColumns}
+        emptyMessage="No users in database"
+        emptyStateAction={{ label: 'Add First User', onClick: onAction }}
+      />
+    );
+
+    const btn = screen.getByRole('button', { name: 'Add First User' });
+    expect(btn).toBeDefined();
+    fireEvent.click(btn);
+    expect(onAction).toHaveBeenCalledTimes(1);
+  });
+
+  it('renders error state with retry action when errorState is provided', () => {
+    const onRetry = vi.fn();
+    render(
+      <DataGrid
+        data={testData}
+        columns={testColumns}
+        errorState={{
+          title: 'Database connection failed',
+          message: 'Could not fetch records due to network timeout.',
+          onRetry,
+        }}
+      />
+    );
+
+    expect(screen.getByText('Database connection failed')).toBeDefined();
+    expect(screen.getByText('Could not fetch records due to network timeout.')).toBeDefined();
+
+    const retryBtn = screen.getByRole('button', { name: 'Retry Query' });
+    fireEvent.click(retryBtn);
+    expect(onRetry).toHaveBeenCalledTimes(1);
+  });
+
+  it('applies sticky and frozen column styles when configured', () => {
+    const { container } = render(
+      <DataGrid
+        data={testData}
+        columns={testColumns}
+        stickyHeader
+        frozenLeadingColumn
+        resizableColumns
+      />
+    );
+
+    const ths = container.querySelectorAll('thead th');
+    expect(ths[0]?.getAttribute('style')).toContain('position: sticky');
+    expect(ths[0]?.getAttribute('style')).toContain('inset-inline-start: 0');
+
+    const tds = container.querySelectorAll('tbody td');
+    expect(tds[0]?.getAttribute('style')).toContain('position: sticky');
+    expect(tds[0]?.getAttribute('style')).toContain('inset-inline-start: 0');
+
+    const resizeHandles = screen.getAllByRole('separator');
+    expect(resizeHandles.length).toBeGreaterThan(0);
+  });
 });
+

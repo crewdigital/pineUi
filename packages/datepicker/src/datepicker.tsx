@@ -1,35 +1,64 @@
 import * as React from 'react';
 
+export interface DateRange {
+  start: Date | null;
+  end: Date | null;
+}
+
+export interface DatePickerPreset {
+  label: string;
+  getValue: () => Date | DateRange;
+}
+
 export interface DatePickerProps {
+  mode?: 'single' | 'range' | undefined;
   value?: Date | null | undefined;
   defaultValue?: Date | null | undefined;
   onChange?: ((date: Date) => void) | undefined;
+  range?: DateRange | undefined;
+  defaultRange?: DateRange | undefined;
+  onRangeChange?: ((range: DateRange) => void) | undefined;
   placeholder?: string | undefined;
   disabled?: boolean | undefined;
   label?: string | undefined;
   id?: string | undefined;
+  months?: 1 | 2 | undefined;
+  presets?: boolean | DatePickerPreset[] | undefined;
 }
 
 export function DatePicker({
+  mode = 'single',
   value: controlledValue,
   defaultValue = null,
   onChange,
+  range: controlledRange,
+  defaultRange = { start: null, end: null },
+  onRangeChange,
   placeholder = 'Select date...',
   disabled = false,
   label,
   id: customId,
+  months = 1,
+  presets = false,
 }: DatePickerProps) {
   const generatedId = React.useId();
   const inputId = customId ?? generatedId;
 
+  // Single date state
   const [internalValue, setInternalValue] = React.useState<Date | null>(defaultValue);
-  const isControlled = controlledValue !== undefined;
-  const selectedDate = isControlled ? controlledValue : internalValue;
+  const isControlledSingle = controlledValue !== undefined;
+  const selectedDate = isControlledSingle ? controlledValue : internalValue;
+
+  // Range date state
+  const [internalRange, setInternalRange] = React.useState<DateRange>(defaultRange);
+  const isControlledRange = controlledRange !== undefined;
+  const selectedRange = isControlledRange ? controlledRange! : internalRange;
 
   const [isOpen, setIsOpen] = React.useState(false);
-  const [viewDate, setViewDate] = React.useState<Date>(
-    () => selectedDate ?? new Date()
-  );
+  const [viewDate, setViewDate] = React.useState<Date>(() => {
+    if (mode === 'range' && selectedRange.start) return selectedRange.start;
+    return selectedDate ?? new Date();
+  });
 
   const containerRef = React.useRef<HTMLDivElement | null>(null);
 
@@ -45,53 +74,163 @@ export function DatePicker({
     return () => document.removeEventListener('mousedown', handleOutsideClick);
   }, [isOpen]);
 
-  const year = viewDate.getFullYear();
-  const month = viewDate.getMonth();
-
   const monthNames = [
     'January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December',
   ];
 
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
-  const firstDayOfWeek = new Date(year, month, 1).getDay();
-
   const handlePrevMonth = () => {
-    setViewDate(new Date(year, month - 1, 1));
+    setViewDate(new Date(viewDate.getFullYear(), viewDate.getMonth() - 1, 1));
   };
 
   const handleNextMonth = () => {
-    setViewDate(new Date(year, month + 1, 1));
+    setViewDate(new Date(viewDate.getFullYear(), viewDate.getMonth() + 1, 1));
   };
 
-  const handleSelectDay = (day: number) => {
-    const nextDate = new Date(year, month, day);
-    if (!isControlled) {
-      setInternalValue(nextDate);
+  const isSameDay = (d1: Date | null, d2: Date | null) => {
+    if (!d1 || !d2) return false;
+    return (
+      d1.getFullYear() === d2.getFullYear() &&
+      d1.getMonth() === d2.getMonth() &&
+      d1.getDate() === d2.getDate()
+    );
+  };
+
+  const isBetween = (d: Date, start: Date | null, end: Date | null) => {
+    if (!start || !end) return false;
+    const target = new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+    const s = new Date(start.getFullYear(), start.getMonth(), start.getDate()).getTime();
+    const e = new Date(end.getFullYear(), end.getMonth(), end.getDate()).getTime();
+    return target > s && target < e;
+  };
+
+  const handleSelectDay = (targetDate: Date) => {
+    if (mode === 'single') {
+      if (!isControlledSingle) {
+        setInternalValue(targetDate);
+      }
+      onChange?.(targetDate);
+      setIsOpen(false);
+    } else {
+      // Range mode selection logic
+      let nextRange: DateRange;
+      if (!selectedRange.start || (selectedRange.start && selectedRange.end)) {
+        nextRange = { start: targetDate, end: null };
+      } else {
+        if (targetDate.getTime() < selectedRange.start.getTime()) {
+          nextRange = { start: targetDate, end: selectedRange.start };
+        } else {
+          nextRange = { start: selectedRange.start, end: targetDate };
+        }
+      }
+
+      if (!isControlledRange) {
+        setInternalRange(nextRange);
+      }
+      onRangeChange?.(nextRange);
+      if (nextRange.start && nextRange.end) {
+        setIsOpen(false);
+      }
     }
-    onChange?.(nextDate);
-    setIsOpen(false);
   };
 
-  const formattedValue = selectedDate
-    ? `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, '0')}-${String(
-        selectedDate.getDate()
-      ).padStart(2, '0')}`
-    : '';
+  const formatDateStr = (d: Date | null) => {
+    if (!d) return '';
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  };
 
-  // Generate calendar grid rows (7 days per row)
-  const calendarDays: (number | null)[] = [];
-  for (let i = 0; i < firstDayOfWeek; i++) {
-    calendarDays.push(null);
-  }
-  for (let d = 1; d <= daysInMonth; d++) {
-    calendarDays.push(d);
-  }
+  const formattedDisplayValue = React.useMemo(() => {
+    if (mode === 'single') {
+      return formatDateStr(selectedDate);
+    }
+    if (selectedRange.start && selectedRange.end) {
+      return `${formatDateStr(selectedRange.start)} - ${formatDateStr(selectedRange.end)}`;
+    }
+    if (selectedRange.start) {
+      return `${formatDateStr(selectedRange.start)} - ...`;
+    }
+    return '';
+  }, [mode, selectedDate, selectedRange]);
 
-  const weeks: (number | null)[][] = [];
-  for (let i = 0; i < calendarDays.length; i += 7) {
-    weeks.push(calendarDays.slice(i, i + 7));
-  }
+  // Default presets
+  const standardPresets: DatePickerPreset[] = React.useMemo(() => {
+    const today = new Date();
+    const startOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
+    const yesterday = new Date(startOfToday);
+    yesterday.setDate(yesterday.getDate() - 1);
+
+    const last7Days = new Date(startOfToday);
+    last7Days.setDate(last7Days.getDate() - 6);
+
+    const last30Days = new Date(startOfToday);
+    last30Days.setDate(last30Days.getDate() - 29);
+
+    const currentQuarter = Math.floor(today.getMonth() / 3);
+    const startOfQuarter = new Date(today.getFullYear(), currentQuarter * 3, 1);
+
+    if (mode === 'single') {
+      return [
+        { label: 'Today', getValue: () => startOfToday },
+        { label: 'Yesterday', getValue: () => yesterday },
+      ];
+    }
+
+    return [
+      { label: 'Today', getValue: () => ({ start: startOfToday, end: startOfToday }) },
+      { label: 'Yesterday', getValue: () => ({ start: yesterday, end: yesterday }) },
+      { label: 'Last 7 Days', getValue: () => ({ start: last7Days, end: startOfToday }) },
+      { label: 'Last 30 Days', getValue: () => ({ start: last30Days, end: startOfToday }) },
+      { label: 'This Quarter', getValue: () => ({ start: startOfQuarter, end: startOfToday }) },
+    ];
+  }, [mode]);
+
+  const activePresets = Array.isArray(presets) ? presets : presets ? standardPresets : [];
+
+  const handleApplyPreset = (preset: DatePickerPreset) => {
+    const val = preset.getValue();
+    if (mode === 'single' && val instanceof Date) {
+      if (!isControlledSingle) setInternalValue(val);
+      onChange?.(val);
+      setViewDate(val);
+      setIsOpen(false);
+    } else if (mode === 'range' && typeof val === 'object' && !(val instanceof Date)) {
+      if (!isControlledRange) setInternalRange(val);
+      onRangeChange?.(val);
+      if (val.start) setViewDate(val.start);
+      setIsOpen(false);
+    }
+  };
+
+  // Helper to generate weeks grid for a given year & month
+  const getMonthWeeks = (y: number, m: number) => {
+    const daysInM = new Date(y, m + 1, 0).getDate();
+    const firstDay = new Date(y, m, 1).getDay();
+
+    const calendarDays: (number | null)[] = [];
+    for (let i = 0; i < firstDay; i++) {
+      calendarDays.push(null);
+    }
+    for (let d = 1; d <= daysInM; d++) {
+      calendarDays.push(d);
+    }
+
+    const w: (number | null)[][] = [];
+    for (let i = 0; i < calendarDays.length; i += 7) {
+      w.push(calendarDays.slice(i, i + 7));
+    }
+    return w;
+  };
+
+  const renderedMonths = React.useMemo(() => {
+    const res: { year: number; month: number }[] = [];
+    res.push({ year: viewDate.getFullYear(), month: viewDate.getMonth() });
+    if (months === 2) {
+      const nextM = new Date(viewDate.getFullYear(), viewDate.getMonth() + 1, 1);
+      res.push({ year: nextM.getFullYear(), month: nextM.getMonth() });
+    }
+    return res;
+  }, [viewDate, months]);
 
   return (
     <div
@@ -121,6 +260,7 @@ export function DatePicker({
           border: '1px solid #cbd5e1',
           borderRadius: '6px',
           backgroundColor: disabled ? '#f8fafc' : '#ffffff',
+          width: mode === 'range' ? '240px' : '180px',
         }}
       >
         <input
@@ -128,17 +268,18 @@ export function DatePicker({
           type="text"
           readOnly
           disabled={disabled}
-          value={formattedValue}
-          placeholder={placeholder}
+          value={formattedDisplayValue}
+          placeholder={mode === 'range' ? 'YYYY-MM-DD - YYYY-MM-DD' : placeholder}
           onClick={() => !disabled && setIsOpen(!isOpen)}
           style={{
             border: 'none',
             outline: 'none',
             padding: '8px 12px',
-            fontSize: '14px',
+            fontSize: '13px',
             cursor: disabled ? 'not-allowed' : 'pointer',
             backgroundColor: 'transparent',
-            width: '180px',
+            flex: 1,
+            color: '#0f172a',
           }}
         />
 
@@ -157,7 +298,23 @@ export function DatePicker({
             color: '#64748b',
           }}
         >
-          📅
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+            style={{ display: 'block' }}
+          >
+            <rect width="18" height="18" x="3" y="4" rx="2" ry="2" />
+            <line x1="16" y1="2" x2="16" y2="6" />
+            <line x1="8" y1="2" x2="8" y2="6" />
+            <line x1="3" y1="10" x2="21" y2="10" />
+          </svg>
         </button>
       </div>
 
@@ -167,126 +324,240 @@ export function DatePicker({
           aria-label="Choose date"
           style={{
             position: 'absolute',
-            top: 'calc(100% + 4px)',
-            left: 0,
+            top: 'calc(100% + 6px)',
+            insetInlineStart: 0,
             zIndex: 1000,
             backgroundColor: '#ffffff',
             border: '1px solid #e2e8f0',
-            borderRadius: '8px',
-            boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+            borderRadius: '10px',
+            boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)',
             padding: '16px',
-            width: '260px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '12px',
           }}
         >
-          {/* Calendar Header */}
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              marginBottom: '12px',
-            }}
-          >
-            <button
-              type="button"
-              onClick={handlePrevMonth}
-              aria-label="Previous month"
+          {/* Quick-select presets chip bar */}
+          {activePresets.length > 0 && (
+            <div
               style={{
-                border: '1px solid #e2e8f0',
-                background: '#f8fafc',
-                borderRadius: '4px',
-                padding: '4px 8px',
-                cursor: 'pointer',
+                display: 'flex',
+                gap: '6px',
+                flexWrap: 'wrap',
+                paddingBottom: '10px',
+                borderBottom: '1px solid #f1f5f9',
               }}
             >
-              ◀
-            </button>
-            <span style={{ fontWeight: 600, fontSize: '14px' }}>
-              {monthNames[month]} {year}
-            </span>
-            <button
-              type="button"
-              onClick={handleNextMonth}
-              aria-label="Next month"
-              style={{
-                border: '1px solid #e2e8f0',
-                background: '#f8fafc',
-                borderRadius: '4px',
-                padding: '4px 8px',
-                cursor: 'pointer',
-              }}
-            >
-              ▶
-            </button>
-          </div>
-
-          {/* Calendar Table */}
-          <table
-            role="grid"
-            aria-label={`${monthNames[month]} ${year}`}
-            style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'center' }}
-          >
-            <thead role="rowgroup">
-              <tr role="row">
-                {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map((d) => (
-                  <th
-                    key={d}
-                    role="columnheader"
-                    style={{ fontSize: '12px', color: '#64748b', padding: '4px 0' }}
-                  >
-                    {d}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody role="rowgroup">
-              {weeks.map((week, wIdx) => (
-                <tr key={wIdx} role="row">
-                  {week.map((day, dIdx) => {
-                    if (day === null) {
-                      return <td key={dIdx} role="gridcell" style={{ padding: '2px' }} />;
-                    }
-
-                    const isSelected =
-                      selectedDate !== null &&
-                      selectedDate.getFullYear() === year &&
-                      selectedDate.getMonth() === month &&
-                      selectedDate.getDate() === day;
-
-                    return (
-                      <td
-                        key={dIdx}
-                        role="gridcell"
-                        aria-selected={isSelected}
-                        style={{ padding: '2px' }}
-                      >
-                        <button
-                          type="button"
-                          aria-label={`${monthNames[month]} ${day}, ${year}`}
-                          onClick={() => handleSelectDay(day)}
-                          style={{
-                            width: '30px',
-                            height: '30px',
-                            borderRadius: '50%',
-                            border: 'none',
-                            backgroundColor: isSelected ? '#2563eb' : 'transparent',
-                            color: isSelected ? '#ffffff' : '#1e293b',
-                            fontSize: '13px',
-                            cursor: 'pointer',
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                          }}
-                        >
-                          {day}
-                        </button>
-                      </td>
-                    );
-                  })}
-                </tr>
+              {activePresets.map((preset) => (
+                <button
+                  key={preset.label}
+                  type="button"
+                  onClick={() => handleApplyPreset(preset)}
+                  style={{
+                    backgroundColor: '#f1f5f9',
+                    border: '1px solid #e2e8f0',
+                    borderRadius: '9999px',
+                    padding: '3px 10px',
+                    fontSize: '11px',
+                    fontWeight: 600,
+                    color: '#475569',
+                    cursor: 'pointer',
+                    transition: 'all 120ms ease',
+                  }}
+                >
+                  {preset.label}
+                </button>
               ))}
-            </tbody>
-          </table>
+            </div>
+          )}
+
+          {/* Calendar Months Display (Single or Dual Month) */}
+          <div style={{ display: 'flex', gap: '20px', alignItems: 'flex-start' }}>
+            {renderedMonths.map(({ year, month }, monthIndex) => {
+              const weeks = getMonthWeeks(year, month);
+              const isFirstMonth = monthIndex === 0;
+              const isLastMonth = monthIndex === renderedMonths.length - 1;
+
+              return (
+                <div key={`${year}-${month}`} style={{ width: '240px' }}>
+                  {/* Header navigation */}
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      marginBottom: '10px',
+                    }}
+                  >
+                    {isFirstMonth ? (
+                      <button
+                        type="button"
+                        onClick={handlePrevMonth}
+                        aria-label="Previous month"
+                        style={{
+                          border: '1px solid #e2e8f0',
+                          background: '#f8fafc',
+                          borderRadius: '4px',
+                          padding: '3px 8px',
+                          cursor: 'pointer',
+                        }}
+                      >
+                        <svg
+                          width="12"
+                          height="12"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          aria-hidden="true"
+                          style={{ display: 'inline-block', transform: 'scaleX(var(--pine-rtl-flip, 1))' }}
+                        >
+                          <path d="m15 18-6-6 6-6" />
+                        </svg>
+                      </button>
+                    ) : (
+                      <div style={{ width: '28px' }} />
+                    )}
+
+                    <span style={{ fontWeight: 600, fontSize: '13px', color: '#1e293b' }}>
+                      {monthNames[month]} {year}
+                    </span>
+
+                    {isLastMonth ? (
+                      <button
+                        type="button"
+                        onClick={handleNextMonth}
+                        aria-label="Next month"
+                        style={{
+                          border: '1px solid #e2e8f0',
+                          background: '#f8fafc',
+                          borderRadius: '4px',
+                          padding: '3px 8px',
+                          cursor: 'pointer',
+                        }}
+                      >
+                        <svg
+                          width="12"
+                          height="12"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          aria-hidden="true"
+                          style={{ display: 'inline-block', transform: 'scaleX(var(--pine-rtl-flip, 1))' }}
+                        >
+                          <path d="m9 18 6-6-6-6" />
+                        </svg>
+                      </button>
+                    ) : (
+                      <div style={{ width: '28px' }} />
+                    )}
+                  </div>
+
+                  {/* Day table */}
+                  <table
+                    role="grid"
+                    aria-label={`${monthNames[month]} ${year}`}
+                    style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'center' }}
+                  >
+                    <thead role="rowgroup">
+                      <tr role="row">
+                        {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map((d) => (
+                          <th
+                            key={d}
+                            role="columnheader"
+                            style={{ fontSize: '11px', color: '#64748b', padding: '4px 0', fontWeight: 600 }}
+                          >
+                            {d}
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody role="rowgroup">
+                      {weeks.map((week, wIdx) => (
+                        <tr key={wIdx} role="row">
+                          {week.map((day, dIdx) => {
+                            if (day === null) {
+                              return <td key={dIdx} role="gridcell" style={{ padding: '2px' }} />;
+                            }
+
+                            const cellDate = new Date(year, month, day);
+
+                            const isSingleSelected =
+                              mode === 'single' && isSameDay(selectedDate, cellDate);
+                            const isRangeStart =
+                              mode === 'range' && isSameDay(selectedRange.start, cellDate);
+                            const isRangeEnd =
+                              mode === 'range' && isSameDay(selectedRange.end, cellDate);
+                            const isInRange =
+                              mode === 'range' && isBetween(cellDate, selectedRange.start, selectedRange.end);
+
+                            return (
+                              <td
+                                key={dIdx}
+                                role="gridcell"
+                                aria-selected={isSingleSelected || isRangeStart || isRangeEnd || isInRange}
+                                style={{
+                                  padding: '2px 0',
+                                  backgroundColor: isInRange
+                                    ? '#dbeafe'
+                                    : isRangeStart && selectedRange.end
+                                    ? 'rgba(219, 234, 254, 0.5)'
+                                    : isRangeEnd && selectedRange.start
+                                    ? 'rgba(219, 234, 254, 0.5)'
+                                    : 'transparent',
+                                  borderTopLeftRadius: isRangeStart ? '9999px' : '0',
+                                  borderBottomLeftRadius: isRangeStart ? '9999px' : '0',
+                                  borderTopRightRadius: isRangeEnd ? '9999px' : '0',
+                                  borderBottomRightRadius: isRangeEnd ? '9999px' : '0',
+                                }}
+                              >
+                                <button
+                                  type="button"
+                                  aria-label={`${monthNames[month]} ${day}, ${year}`}
+                                  onClick={() => handleSelectDay(cellDate)}
+                                  style={{
+                                    width: '28px',
+                                    height: '28px',
+                                    borderRadius: '50%',
+                                    border: 'none',
+                                    backgroundColor:
+                                      isSingleSelected || isRangeStart || isRangeEnd
+                                        ? '#2563eb'
+                                        : 'transparent',
+                                    color:
+                                      isSingleSelected || isRangeStart || isRangeEnd
+                                        ? '#ffffff'
+                                        : isInRange
+                                        ? '#1d4ed8'
+                                        : '#1e293b',
+                                    fontWeight:
+                                      isSingleSelected || isRangeStart || isRangeEnd || isInRange ? 700 : 400,
+                                    fontSize: '12px',
+                                    cursor: 'pointer',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    transition: 'all 100ms ease',
+                                  }}
+                                >
+                                  {day}
+                                </button>
+                              </td>
+                            );
+                          })}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              );
+            })}
+          </div>
         </div>
       )}
     </div>
