@@ -37,6 +37,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Lint codebase
+        run: pnpm lint
+
       - name: Build all packages in topological order
         run: pnpm turbo build
 
@@ -44,7 +47,7 @@ jobs:
         run: pnpm turbo typecheck
 
       - name: Test verification
-        run: pnpm turbo test
+        run: pnpm test
 
       - name: Publish packages to NPM
         run: pnpm -r publish --access public --tag ${{ github.event.inputs.tag || 'latest' }} --no-git-checks
