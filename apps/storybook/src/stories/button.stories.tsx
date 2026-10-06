@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Button } from '@pine-ui/react/button';
 import { Stack } from '@pine-ui/primitives/stack';
 import { Inline } from '@pine-ui/primitives/inline';
+import { Plus, ArrowRight, Check } from '@pine-ui/icons';
 
 const meta: Meta<typeof Button> = {
   title: 'Controls/Button',
@@ -72,11 +73,11 @@ export const States: Story = {
 export const WithIcons: Story = {
   render: () => (
     <Inline gap={3} align="center">
-      <Button iconStart={<span>★</span>}>Start Icon</Button>
-      <Button iconEnd={<span>→</span>} variant="secondary">
+      <Button iconStart={<Check size={16} />}>Start Icon</Button>
+      <Button iconEnd={<ArrowRight size={16} />} variant="secondary">
         End Icon
       </Button>
-      <Button iconStart={<span>+</span>} iconEnd={<span>⌘K</span>} variant="outline">
+      <Button iconStart={<Plus size={16} />} iconEnd={<span>Ctrl+K</span>} variant="outline">
         Shortcut
       </Button>
     </Inline>

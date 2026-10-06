@@ -2,11 +2,12 @@ import * as React from 'react';
 import type { Preview, StoryContext, StoryFn } from '@storybook/react';
 import '@pine-ui/themes/css';
 import { STANDARD_PALETTES } from '../src/palettes.js';
+import { DirectionProvider, type Direction } from '@pine-ui/react';
 
 const withThemeDecorator = (Story: StoryFn, context: StoryContext) => {
   const scheme = context.globals.theme || 'light';
   const density = context.globals.density || 'default';
-  const direction = context.globals.direction || 'ltr';
+  const direction = (context.globals.direction || 'ltr') as Direction;
   const paletteKey = context.globals.palette || 'emerald';
 
   const palette = STANDARD_PALETTES[paletteKey] ?? STANDARD_PALETTES['emerald']!;
@@ -42,14 +43,16 @@ const withThemeDecorator = (Story: StoryFn, context: StoryContext) => {
   };
 
   return (
-    <div
-      data-scheme={scheme}
-      data-density={density}
-      dir={direction}
-      style={styleOverrides as React.CSSProperties}
-    >
-      <Story />
-    </div>
+    <DirectionProvider dir={direction}>
+      <div
+        data-scheme={scheme}
+        data-density={density}
+        dir={direction}
+        style={styleOverrides as React.CSSProperties}
+      >
+        <Story />
+      </div>
+    </DirectionProvider>
   );
 };
 
@@ -95,13 +98,13 @@ const preview: Preview = {
         title: 'Color Palette',
         icon: 'paintbrush',
         items: [
-          { value: 'emerald', title: '🌲 Pine Emerald (#059669)' },
-          { value: 'blue', title: '🔷 Sapphire Blue (#2563eb)' },
-          { value: 'indigo', title: '🔮 Deep Indigo (#4f46e5)' },
-          { value: 'purple', title: '🍇 Amethyst Purple (#7c3aed)' },
-          { value: 'rose', title: '🌹 Ruby Rose (#e11d48)' },
-          { value: 'amber', title: '☀️ Amber Sun (#d97706)' },
-          { value: 'slate', title: '🖤 Minimal Slate (#0f172a)' },
+          { value: 'emerald', title: 'Pine Emerald (#059669)' },
+          { value: 'blue', title: 'Sapphire Blue (#2563eb)' },
+          { value: 'indigo', title: 'Deep Indigo (#4f46e5)' },
+          { value: 'purple', title: 'Amethyst Purple (#7c3aed)' },
+          { value: 'rose', title: 'Ruby Rose (#e11d48)' },
+          { value: 'amber', title: 'Amber Sun (#d97706)' },
+          { value: 'slate', title: 'Minimal Slate (#0f172a)' },
         ],
         dynamicTitle: true,
       },

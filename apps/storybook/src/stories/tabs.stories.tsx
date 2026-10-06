@@ -1,7 +1,6 @@
 import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Tabs, TabList, Tab, TabPanel } from '@pine-ui/react/tabs';
-import { Stack } from '@pine-ui/primitives/stack';
 import { Text } from '@pine-ui/primitives/text';
 
 const meta: Meta<typeof Tabs> = {

@@ -32,15 +32,15 @@ export const Default: Story = {
           <MenuLabel>Personal</MenuLabel>
           <MenuItem>
             <span>Profile</span>
-            <MenuShortcut>⇧⌘P</MenuShortcut>
+            <MenuShortcut>Ctrl+Shift+P</MenuShortcut>
           </MenuItem>
           <MenuItem>
             <span>Billing</span>
-            <MenuShortcut>⌘B</MenuShortcut>
+            <MenuShortcut>Ctrl+B</MenuShortcut>
           </MenuItem>
           <MenuItem>
             <span>Settings</span>
-            <MenuShortcut>⌘S</MenuShortcut>
+            <MenuShortcut>Ctrl+S</MenuShortcut>
           </MenuItem>
           <MenuSeparator />
           <MenuGroup>
@@ -65,7 +65,7 @@ export const AlignEnd: Story = {
     <div style={{ padding: '80px', display: 'flex', justifyContent: 'flex-end' }}>
       <Menu>
         <MenuTrigger>
-          <Button variant="outline">Actions ▾</Button>
+          <Button variant="outline">Actions</Button>
         </MenuTrigger>
         <MenuContent align="end">
           <MenuItem>Duplicate</MenuItem>

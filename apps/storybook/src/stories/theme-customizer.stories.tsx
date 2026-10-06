@@ -21,13 +21,56 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Interactive real-time theme customizer for Pine UI. Customize standard color palettes, light/dark/high-contrast modes, border radiuses, and copy production-ready CSS variables directly.',
+          'Interactive real-time theme customizer for Pine UI. Customize standard color palettes, light/dark/high-contrast modes, border radiuses, preview live application mockups, and export directly as CSS, Tailwind, or StyleX.',
       },
     },
   },
 };
 
 export default meta;
+
+interface PresetTheme {
+  name: string;
+  paletteKey: string;
+  customColor?: string;
+  mode: 'light' | 'dark' | 'high-contrast';
+  radius: string;
+  density: 'compact' | 'default' | 'comfortable';
+}
+
+const PRESET_THEMES: PresetTheme[] = [
+  {
+    name: 'Pine Enterprise',
+    paletteKey: 'emerald',
+    mode: 'light',
+    radius: '8px',
+    density: 'default',
+  },
+  {
+    name: 'Midnight Nebula',
+    paletteKey: 'violet',
+    customColor: '#7c3aed',
+    mode: 'dark',
+    radius: '12px',
+    density: 'comfortable',
+  },
+  {
+    name: 'Linear Minimal',
+    paletteKey: 'custom',
+    customColor: '#52525b',
+    mode: 'dark',
+    radius: '6px',
+    density: 'compact',
+  },
+  {
+    name: 'Sunset Amber',
+    paletteKey: 'amber',
+    customColor: '#f59e0b',
+    mode: 'dark',
+    radius: '10px',
+    density: 'default',
+  },
+];
 
 export const LiveCustomizer: StoryObj = {
   render: () => {
@@ -37,7 +80,17 @@ export const LiveCustomizer: StoryObj = {
     const [radius, setRadius] = React.useState<string>('8px');
     const [density, setDensity] = React.useState<'compact' | 'default' | 'comfortable'>('default');
     const [switchValue, setSwitchValue] = React.useState<boolean>(true);
+    const [previewTab, setPreviewTab] = React.useState<'components' | 'mockup'>('components');
+    const [exportFormat, setExportFormat] = React.useState<'css' | 'tailwind' | 'stylex'>('css');
     const [copied, setCopied] = React.useState<boolean>(false);
+
+    const applyPreset = (preset: PresetTheme) => {
+      setSelectedPaletteKey(preset.paletteKey);
+      if (preset.customColor) setCustomColor(preset.customColor);
+      setColorMode(preset.mode);
+      setRadius(preset.radius);
+      setDensity(preset.density);
+    };
 
     const activePalette: StandardPalette =
       selectedPaletteKey === 'custom'
@@ -77,9 +130,50 @@ export const LiveCustomizer: StoryObj = {
   --pine-radius-lg: calc(${radius} + 4px);
 }`;
 
+    const generatedTailwind = `// tailwind.config.js
+module.exports = {
+  theme: {
+    extend: {
+      colors: {
+        brand: {
+          DEFAULT: '${activePalette.primary}',
+          hover: '${activePalette.hover}',
+          active: '${activePalette.active}',
+          subtle: '${activePalette.subtle}',
+          focus: '${activePalette.focus}',
+        },
+      },
+      borderRadius: {
+        brand: '${radius}',
+      },
+    },
+  },
+};`;
+
+    const generatedStylex = `// theme.stylex.ts
+import * as stylex from '@stylexjs/stylex';
+import { vars } from '@pine-ui/stylex';
+
+export const customTheme = stylex.createTheme(vars, {
+  actionPrimaryBackground: '${activePalette.primary}',
+  actionPrimaryBackgroundHover: '${activePalette.hover}',
+  actionPrimaryBackgroundActive: '${activePalette.active}',
+  backgroundBrand: '${activePalette.primary}',
+  backgroundBrandSubtle: '${activePalette.subtle}',
+  focusRing: '${activePalette.focus}',
+  radiusMd: '${radius}',
+});`;
+
+    const currentExportCode =
+      exportFormat === 'css'
+        ? generatedCss
+        : exportFormat === 'tailwind'
+        ? generatedTailwind
+        : generatedStylex;
+
     const handleCopy = () => {
       if (typeof navigator !== 'undefined' && navigator.clipboard) {
-        navigator.clipboard.writeText(generatedCss);
+        navigator.clipboard.writeText(currentExportCode);
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
       }
@@ -107,15 +201,15 @@ export const LiveCustomizer: StoryObj = {
           ['--pine-radius-md' as string]: radius,
         }}
       >
-        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+        <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
           {/* Header */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '28px' }}>
             <div>
               <h2 style={{ margin: 0, fontSize: '24px', fontWeight: 800, letterSpacing: '-0.02em', color: textColor }}>
-                🎨 Pine UI Theme Studio
+                Pine UI Theme Studio & Export Engine
               </h2>
               <p style={{ margin: '4px 0 0', fontSize: '14px', color: subtextColor }}>
-                Interactive real-time theme customizer adhering to standard WCAG AA color palettes.
+                Real-time theme architect with dual-layer elevation, spring physics, and multi-target code generation.
               </p>
             </div>
             <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
@@ -124,12 +218,53 @@ export const LiveCustomizer: StoryObj = {
                 size="sm"
                 onClick={() => window.open('https://github.com/crewdigital/pineui', '_blank')}
               >
-                GitHub Repository ↗
+                GitHub
               </Button>
               <Button variant="primary" size="sm" onClick={handleCopy}>
-                {copied ? '✓ Copied CSS!' : 'Copy Theme CSS'}
+                {copied ? 'Copied Code!' : `Copy ${exportFormat.toUpperCase()}`}
               </Button>
             </div>
+          </div>
+
+          {/* 1-Click Preset Themes Bar */}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+              padding: '12px 16px',
+              backgroundColor: surfaceBg,
+              border: `1px solid ${borderColor}`,
+              borderRadius: '10px',
+              marginBottom: '24px',
+              flexWrap: 'wrap',
+            }}
+          >
+            <span style={{ fontSize: '13px', fontWeight: 600, color: subtextColor, marginRight: '4px' }}>
+              1-Click Presets:
+            </span>
+            {PRESET_THEMES.map((preset) => (
+              <button
+                key={preset.name}
+                type="button"
+                onClick={() => applyPreset(preset)}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  padding: '6px 12px',
+                  borderRadius: '6px',
+                  border: `1px solid ${borderColor}`,
+                  backgroundColor: canvasBg,
+                  color: textColor,
+                  fontSize: '13px',
+                  fontWeight: 500,
+                  cursor: 'pointer',
+                  transition: 'background-color 0.15s ease, border-color 0.15s ease',
+                }}
+              >
+                {preset.name}
+              </button>
+            ))}
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: '380px 1fr', gap: '28px' }}>
@@ -147,330 +282,403 @@ export const LiveCustomizer: StoryObj = {
                 boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)',
               }}
             >
-              {/* Palette Choice */}
               <div>
-                <span style={{ fontSize: '13px', fontWeight: 700, marginBottom: '12px', display: 'block', color: textColor }}>
-                  Standard Color Palette
-                </span>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px' }}>
+                <h3 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: 700, color: textColor }}>
+                  Palette & Brand Hue
+                </h3>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px' }}>
                   {Object.entries(STANDARD_PALETTES).map(([key, pal]) => {
                     const isSelected = selectedPaletteKey === key;
                     return (
                       <button
                         key={key}
-                        type="button"
                         onClick={() => setSelectedPaletteKey(key)}
                         style={{
                           display: 'flex',
                           flexDirection: 'column',
                           alignItems: 'center',
-                          gap: '6px',
-                          padding: '10px 4px',
-                          border: `2px solid ${isSelected ? pal.primary : borderColor}`,
+                          padding: '8px 4px',
+                          border: `2px solid ${isSelected ? activePalette.focus : 'transparent'}`,
                           borderRadius: '8px',
-                          backgroundColor: isSelected ? (isDark ? '#1e293b' : '#f1f5f9') : 'transparent',
+                          backgroundColor: canvasBg,
                           cursor: 'pointer',
-                          transition: 'all 0.15s ease',
+                          gap: '6px',
+                          outline: 'none',
                         }}
                       >
-                        <span
+                        <div
                           style={{
                             width: '24px',
                             height: '24px',
                             borderRadius: '50%',
                             backgroundColor: pal.primary,
-                            boxShadow: '0 2px 4px rgba(0,0,0,0.15)',
+                            boxShadow: '0 1px 3px rgba(0,0,0,0.15)',
                           }}
                         />
                         <span style={{ fontSize: '11px', color: textColor, fontWeight: isSelected ? 700 : 500 }}>
-                          {key.charAt(0).toUpperCase() + key.slice(1)}
+                          {pal.name}
                         </span>
                       </button>
                     );
                   })}
                 </div>
-
-                {/* Custom Color Input */}
-                <div style={{ marginTop: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <input
-                    type="color"
-                    id="custom-color-picker"
-                    aria-label="Custom Hex Color"
-                    value={customColor}
-                    onChange={(e) => {
-                      setCustomColor(e.target.value);
-                      setSelectedPaletteKey('custom');
-                    }}
-                    style={{
-                      width: '36px',
-                      height: '36px',
-                      borderRadius: '6px',
-                      border: `1px solid ${borderColor}`,
-                      cursor: 'pointer',
-                      padding: 0,
-                    }}
-                  />
-                  <span style={{ fontSize: '12px', color: subtextColor }}>
-                    Custom Hex: <code style={{ fontWeight: 600 }}>{activePalette.primary}</code>
-                  </span>
-                </div>
               </div>
 
-              {/* Color Scheme / Mode */}
               <div>
-                <span style={{ fontSize: '13px', fontWeight: 700, marginBottom: '10px', display: 'block', color: textColor }}>
-                  Color Scheme
-                </span>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
-                  {(['light', 'dark', 'high-contrast'] as const).map((m) => (
-                    <button
-                      key={m}
-                      type="button"
-                      onClick={() => setColorMode(m)}
-                      style={{
-                        padding: '8px 4px',
-                        fontSize: '12px',
-                        fontWeight: colorMode === m ? 700 : 500,
-                        border: `1px solid ${colorMode === m ? activePalette.primary : borderColor}`,
-                        borderRadius: '6px',
-                        backgroundColor: colorMode === m ? activePalette.primary : 'transparent',
-                        color: colorMode === m ? '#ffffff' : textColor,
-                        cursor: 'pointer',
-                        textTransform: 'capitalize',
-                      }}
+                <h3 style={{ margin: '0 0 12px 0', fontSize: '16px', fontWeight: 700, color: textColor }}>
+                  Color Appearance
+                </h3>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '8px' }}>
+                  {(['light', 'dark', 'high-contrast'] as const).map((mode) => (
+                    <Button
+                      key={mode}
+                      size="sm"
+                      variant={colorMode === mode ? 'primary' : 'outline'}
+                      onClick={() => setColorMode(mode)}
                     >
-                      {m.replace('-', ' ')}
-                    </button>
+                      {mode === 'light' ? 'Light' : mode === 'dark' ? 'Dark' : 'Contrast'}
+                    </Button>
                   ))}
                 </div>
               </div>
 
-              {/* Corner Radius */}
               <div>
-                <span style={{ fontSize: '13px', fontWeight: 700, marginBottom: '10px', display: 'block', color: textColor }}>
-                  Corner Radius: {radius}
-                </span>
-                <div style={{ display: 'flex', gap: '6px' }}>
+                <h3 style={{ margin: '0 0 12px 0', fontSize: '16px', fontWeight: 700, color: textColor }}>
+                  Corner Radius
+                </h3>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px' }}>
                   {[
                     { label: 'None', val: '0px' },
-                    { label: 'Sm (4px)', val: '4px' },
-                    { label: 'Md (8px)', val: '8px' },
-                    { label: 'Lg (12px)', val: '12px' },
-                    { label: 'Pill', val: '9999px' },
+                    { label: 'Sm', val: '4px' },
+                    { label: 'Md', val: '8px' },
+                    { label: 'Lg', val: '12px' },
                   ].map((r) => (
-                    <button
-                      key={r.label}
-                      type="button"
+                    <Button
+                      key={r.val}
+                      size="sm"
+                      variant={radius === r.val ? 'primary' : 'outline'}
                       onClick={() => setRadius(r.val)}
-                      style={{
-                        flex: 1,
-                        padding: '6px 2px',
-                        fontSize: '11px',
-                        fontWeight: radius === r.val ? 700 : 500,
-                        border: `1px solid ${radius === r.val ? activePalette.primary : borderColor}`,
-                        borderRadius: '6px',
-                        backgroundColor: radius === r.val ? (isDark ? '#1e293b' : '#f1f5f9') : 'transparent',
-                        color: textColor,
-                        cursor: 'pointer',
-                      }}
                     >
                       {r.label}
-                    </button>
+                    </Button>
                   ))}
                 </div>
               </div>
 
-              {/* Interface Density */}
+              {/* Export Format Selector */}
               <div>
-                <span style={{ fontSize: '13px', fontWeight: 700, marginBottom: '10px', display: 'block', color: textColor }}>
-                  Density
-                </span>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
-                  {(['compact', 'default', 'comfortable'] as const).map((d) => (
-                    <button
-                      key={d}
-                      type="button"
-                      onClick={() => setDensity(d)}
-                      style={{
-                        padding: '6px 4px',
-                        fontSize: '12px',
-                        fontWeight: density === d ? 700 : 500,
-                        border: `1px solid ${density === d ? activePalette.primary : borderColor}`,
-                        borderRadius: '6px',
-                        backgroundColor: density === d ? (isDark ? '#1e293b' : '#f1f5f9') : 'transparent',
-                        color: textColor,
-                        cursor: 'pointer',
-                        textTransform: 'capitalize',
-                      }}
-                    >
-                      {d}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Export Code snippet */}
-              <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                  <span style={{ fontSize: '12px', fontWeight: 700, color: subtextColor }}>
-                    CSS Variables Code
-                  </span>
-                  <button
-                    type="button"
-                    onClick={handleCopy}
-                    style={{
-                      background: 'none',
-                      border: 'none',
-                      color: activePalette.primary,
-                      fontSize: '12px',
-                      fontWeight: 600,
-                      cursor: 'pointer',
-                    }}
+                <h3 style={{ margin: '0 0 12px 0', fontSize: '16px', fontWeight: 700, color: textColor }}>
+                  Export Engine
+                </h3>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '6px', marginBottom: '12px' }}>
+                  <Button
+                    size="sm"
+                    variant={exportFormat === 'css' ? 'primary' : 'outline'}
+                    onClick={() => setExportFormat('css')}
                   >
-                    {copied ? '✓ Copied' : 'Copy'}
-                  </button>
+                    CSS Variables
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant={exportFormat === 'tailwind' ? 'primary' : 'outline'}
+                    onClick={() => setExportFormat('tailwind')}
+                  >
+                    Tailwind
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant={exportFormat === 'stylex' ? 'primary' : 'outline'}
+                    onClick={() => setExportFormat('stylex')}
+                  >
+                    StyleX
+                  </Button>
                 </div>
                 <pre
                   style={{
-                    backgroundColor: isDark ? '#030712' : '#f1f5f9',
+                    backgroundColor: canvasBg,
                     border: `1px solid ${borderColor}`,
-                    padding: '12px',
                     borderRadius: '8px',
+                    padding: '12px',
                     fontSize: '11px',
-                    overflowX: 'auto',
                     fontFamily: 'monospace',
-                    color: subtextColor,
+                    overflowX: 'auto',
                     margin: 0,
+                    maxHeight: '160px',
+                    color: textColor,
                   }}
                 >
-                  {generatedCss}
+                  {currentExportCode}
                 </pre>
               </div>
             </div>
 
-            {/* Right Column: Live Component Playground */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-              {/* Alert Feedback Banner */}
-              <Alert variant="info" title="Dynamic Theme Preview">
-                {`Currently previewing ${activePalette.name} in ${colorMode} mode with ${radius} radius.`}
-              </Alert>
+            {/* Right Column: Live Interactive Preview */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              {/* Preview Mode Switcher */}
+              <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                <Button
+                  size="sm"
+                  variant={previewTab === 'components' ? 'primary' : 'outline'}
+                  onClick={() => setPreviewTab('components')}
+                >
+                  Component Suite Preview
+                </Button>
+                <Button
+                  size="sm"
+                  variant={previewTab === 'mockup' ? 'primary' : 'outline'}
+                  onClick={() => setPreviewTab('mockup')}
+                >
+                  Full App Mockup View
+                </Button>
+              </div>
 
-              {/* Section 1: Buttons & Actions */}
-              <div
-                style={{
-                  backgroundColor: surfaceBg,
-                  border: `1px solid ${borderColor}`,
-                  borderRadius: '12px',
-                  padding: '24px',
-                  boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)',
-                }}
-              >
-                <h4 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: 700, color: textColor }}>
-                  Buttons & Interactive Controls
-                </h4>
-                <div style={{ display: 'flex', gap: '12px', alignItems: 'center', flexWrap: 'wrap' }}>
-                  <Button variant="primary">
-                    Primary Action
-                  </Button>
-                  <Button variant="secondary">
-                    Secondary
-                  </Button>
-                  <Button variant="danger">
-                    Destructive
-                  </Button>
-                  <Button variant="subtle">
-                    Subtle
-                  </Button>
-                  <Button variant="primary" disabled>
-                    Disabled
-                  </Button>
+              {previewTab === 'mockup' ? (
+                /* Full App Mockup Preview */
+                <div
+                  style={{
+                    backgroundColor: surfaceBg,
+                    border: `1px solid ${borderColor}`,
+                    borderRadius: radius,
+                    boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)',
+                    overflow: 'hidden',
+                  }}
+                >
+                  {/* Mock App Header */}
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      padding: '12px 20px',
+                      borderBottom: `1px solid ${borderColor}`,
+                      backgroundColor: canvasBg,
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                      <span style={{ fontWeight: 800, fontSize: '16px', color: activePalette.primary }}>
+                        PineMetrics
+                      </span>
+                      <Badge variant="primary">Production</Badge>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                      <TextField size="sm" placeholder="Search resources... (Ctrl+K)" />
+                      <Button variant="primary" size="sm">
+                        New Project
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* Mock App Body */}
+                  <div style={{ display: 'grid', gridTemplateColumns: '200px 1fr', minHeight: '340px' }}>
+                    {/* Mock Sidebar */}
+                    <div
+                      style={{
+                        borderRight: `1px solid ${borderColor}`,
+                        padding: '16px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '6px',
+                        backgroundColor: canvasBg,
+                      }}
+                    >
+                      {['Overview', 'Analytics', 'Customers', 'Billing', 'Settings'].map((item, idx) => (
+                        <div
+                          key={item}
+                          style={{
+                            padding: '8px 12px',
+                            borderRadius: radius,
+                            fontSize: '13px',
+                            fontWeight: idx === 0 ? 600 : 400,
+                            backgroundColor: idx === 0 ? activePalette.subtle : 'transparent',
+                            color: idx === 0 ? activePalette.primary : subtextColor,
+                            cursor: 'pointer',
+                          }}
+                        >
+                          {item}
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Mock Content */}
+                    <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                      {/* Metric Cards Grid */}
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
+                        {[
+                          { title: 'Total Revenue', value: '$84,230', trend: '+14.2%' },
+                          { title: 'Active Subscriptions', value: '1,420', trend: '+8.1%' },
+                          { title: 'System Health', value: '99.98%', trend: 'Operational' },
+                        ].map((m) => (
+                          <div
+                            key={m.title}
+                            style={{
+                              padding: '16px',
+                              backgroundColor: canvasBg,
+                              border: `1px solid ${borderColor}`,
+                              borderRadius: radius,
+                            }}
+                          >
+                            <span style={{ fontSize: '12px', color: subtextColor }}>{m.title}</span>
+                            <div style={{ fontSize: '20px', fontWeight: 700, margin: '6px 0', color: textColor }}>
+                              {m.value}
+                            </div>
+                            <Badge variant="success">{m.trend}</Badge>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Mock Table */}
+                      <div
+                        style={{
+                          border: `1px solid ${borderColor}`,
+                          borderRadius: radius,
+                          overflow: 'hidden',
+                        }}
+                      >
+                        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
+                          <thead>
+                            <tr style={{ backgroundColor: canvasBg, borderBottom: `1px solid ${borderColor}` }}>
+                              <th style={{ padding: '10px 14px', textAlign: 'left', color: subtextColor }}>Customer</th>
+                              <th style={{ padding: '10px 14px', textAlign: 'left', color: subtextColor }}>Status</th>
+                              <th style={{ padding: '10px 14px', textAlign: 'left', color: subtextColor }}>Plan</th>
+                              <th style={{ padding: '10px 14px', textAlign: 'right', color: subtextColor }}>MRR</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {[
+                              { name: 'Acme Global Corp', status: 'Active', plan: 'Enterprise', mrr: '$1,200/mo' },
+                              { name: 'Vercel Labs', status: 'Active', plan: 'Pro Scale', mrr: '$450/mo' },
+                              { name: 'Linear Systems', status: 'Trial', plan: 'Team', mrr: '$120/mo' },
+                            ].map((row, i) => (
+                              <tr key={i} style={{ borderBottom: `1px solid ${borderColor}` }}>
+                                <td style={{ padding: '10px 14px', fontWeight: 500, color: textColor }}>{row.name}</td>
+                                <td style={{ padding: '10px 14px' }}>
+                                  <Badge variant={row.status === 'Active' ? 'success' : 'warning'}>{row.status}</Badge>
+                                </td>
+                                <td style={{ padding: '10px 14px', color: subtextColor }}>{row.plan}</td>
+                                <td style={{ padding: '10px 14px', textAlign: 'right', fontWeight: 600, color: textColor }}>
+                                  {row.mrr}
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </div>
+              ) : (
+                /* Component Suite Preview */
+                <>
+                  <Alert variant="info" title="Custom Theme Preview">
+                    Real-time styling changes apply to all Pine UI primitives, tokens, and components dynamically.
+                  </Alert>
 
-              {/* Section 2: Form Controls */}
-              <div
-                style={{
-                  backgroundColor: surfaceBg,
-                  border: `1px solid ${borderColor}`,
-                  borderRadius: '12px',
-                  padding: '24px',
-                  boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)',
-                }}
-              >
-                <h4 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: 700, color: textColor }}>
-                  Form Inputs & State Toggles
-                </h4>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                    <TextField
-                      label="Workspace Domain"
-                      placeholder="e.g. acme.pineui.design"
-                      defaultValue="acme.pineui.design"
-                    />
-                    <TextField
-                      label="Organization Email"
-                      placeholder="alex@company.org"
-                    />
+                  <div
+                    style={{
+                      backgroundColor: surfaceBg,
+                      border: `1px solid ${borderColor}`,
+                      borderRadius: radius,
+                      padding: '24px',
+                      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)',
+                    }}
+                  >
+                    <h4 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: 700, color: textColor }}>
+                      Interactive Buttons & Badges
+                    </h4>
+                    <div style={{ display: 'flex', gap: '12px', alignItems: 'center', flexWrap: 'wrap' }}>
+                      <Button variant="primary">Primary Action</Button>
+                      <Button variant="secondary">Secondary Action</Button>
+                      <Button variant="outline">Outline Action</Button>
+                      <Button variant="ghost">Ghost Action</Button>
+                      <Badge variant="primary">Brand Tag</Badge>
+                      <Badge variant="success">Active</Badge>
+                    </div>
                   </div>
 
-                  <div style={{ display: 'flex', gap: '16px', alignItems: 'center', flexWrap: 'wrap' }}>
-                    <Switch
-                      checked={switchValue}
-                      onChange={(e) => setSwitchValue(e.target.checked)}
-                      label="Enable Instant Theme Sync"
-                    />
-                    <Badge variant="primary">Theme Active</Badge>
-                    <Badge variant="success">WCAG AA Passed</Badge>
+                  <div
+                    style={{
+                      backgroundColor: surfaceBg,
+                      border: `1px solid ${borderColor}`,
+                      borderRadius: radius,
+                      padding: '24px',
+                      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)',
+                    }}
+                  >
+                    <h4 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: 700, color: textColor }}>
+                      Form Controls & Input Adornments
+                    </h4>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                        <TextField
+                          label="Workspace Domain"
+                          prefix="https://"
+                          suffix=".pineui.app"
+                          defaultValue="acme"
+                          clearable
+                        />
+                        <TextField
+                          label="Master Password"
+                          type="password"
+                          defaultValue="supersecret"
+                        />
+                      </div>
+
+                      <div style={{ display: 'flex', gap: '16px', alignItems: 'center', flexWrap: 'wrap' }}>
+                        <Switch
+                          checked={switchValue}
+                          onChange={(e) => setSwitchValue(e.target.checked)}
+                          label="Live Sync Active"
+                        />
+                      </div>
+
+                      <div>
+                        <span style={{ fontSize: '12px', color: subtextColor, marginBottom: '8px', display: 'block' }}>
+                          Progress & Loading Rhythm
+                        </span>
+                        <Progress value={65} max={100} label="Theme Generation Progress" />
+                      </div>
+                    </div>
                   </div>
 
-                  <div>
-                    <span style={{ fontSize: '12px', color: subtextColor, marginBottom: '8px', display: 'block' }}>
-                      Progress & Completion Indicator
-                    </span>
-                    <Progress value={65} max={100} label="Theme Generation Progress" />
+                  <div
+                    style={{
+                      backgroundColor: surfaceBg,
+                      border: `1px solid ${borderColor}`,
+                      borderRadius: radius,
+                      padding: '24px',
+                      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)',
+                    }}
+                  >
+                    <h4 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: 700, color: textColor }}>
+                      Navigation & Tabs
+                    </h4>
+                    <Tabs defaultValue="overview">
+                      <TabList aria-label="Component categories">
+                        <Tab value="overview">Overview</Tab>
+                        <Tab value="tokens">Design Tokens</Tab>
+                        <Tab value="specs">A11y Standards</Tab>
+                      </TabList>
+                      <TabPanel value="overview">
+                        <p style={{ marginTop: '12px', fontSize: '14px', color: subtextColor }}>
+                          Pine UI components dynamically bind to your customized CSS custom properties and StyleX tokens.
+                        </p>
+                      </TabPanel>
+                      <TabPanel value="tokens">
+                        <p style={{ marginTop: '12px', fontSize: '14px', color: subtextColor }}>
+                          Selected brand primary hex: <strong>{activePalette.primary}</strong>. Focus ring:{' '}
+                          <strong>{activePalette.focus}</strong>.
+                        </p>
+                      </TabPanel>
+                      <TabPanel value="specs">
+                        <p style={{ marginTop: '12px', fontSize: '14px', color: subtextColor }}>
+                          All standard color combinations maintain a minimum contrast ratio of 4.5:1 against
+                          their relative surface and canvas colors in compliance with WCAG 2.2 AA standards.
+                        </p>
+                      </TabPanel>
+                    </Tabs>
                   </div>
-                </div>
-              </div>
-
-              {/* Section 3: Navigation & Tabs */}
-              <div
-                style={{
-                  backgroundColor: surfaceBg,
-                  border: `1px solid ${borderColor}`,
-                  borderRadius: '12px',
-                  padding: '24px',
-                  boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)',
-                }}
-              >
-                <h4 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: 700, color: textColor }}>
-                  Navigation & Structured Panels
-                </h4>
-                <Tabs defaultValue="overview">
-                  <TabList aria-label="Component categories">
-                    <Tab value="overview">Overview</Tab>
-                    <Tab value="tokens">Design Tokens</Tab>
-                    <Tab value="specs">A11y Specs</Tab>
-                  </TabList>
-                  <TabPanel value="overview">
-                    <p style={{ marginTop: '12px', fontSize: '14px', color: subtextColor }}>
-                      Pine UI components dynamically bind to your customized CSS custom properties without
-                      requiring React context re-renders or style re-computations.
-                    </p>
-                  </TabPanel>
-                  <TabPanel value="tokens">
-                    <p style={{ marginTop: '12px', fontSize: '14px', color: subtextColor }}>
-                      Selected brand primary hex: <strong>{activePalette.primary}</strong>. Focus ring:{' '}
-                      <strong>{activePalette.focus}</strong>.
-                    </p>
-                  </TabPanel>
-                  <TabPanel value="specs">
-                    <p style={{ marginTop: '12px', fontSize: '14px', color: subtextColor }}>
-                      All standard color combinations maintain a minimum contrast ratio of 4.5:1 against
-                      their relative surface and canvas colors in compliance with WCAG 2.2 AA standards.
-                    </p>
-                  </TabPanel>
-                </Tabs>
-              </div>
+                </>
+              )}
             </div>
           </div>
         </div>

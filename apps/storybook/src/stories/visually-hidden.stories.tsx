@@ -1,6 +1,7 @@
 import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { VisuallyHidden } from '@pine-ui/primitives/visually-hidden';
+import { Close } from '@pine-ui/icons';
 
 const meta: Meta<typeof VisuallyHidden> = {
   title: 'Primitives/VisuallyHidden',
@@ -22,8 +23,7 @@ type Story = StoryObj<typeof VisuallyHidden>;
 export const IconButton: Story = {
   render: () => (
     <button type="button" style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '8px 12px', border: '1px solid #d1d5db', borderRadius: 6, cursor: 'pointer' }}>
-      {/* Simulated icon */}
-      <span aria-hidden="true" style={{ fontSize: 18 }}>✕</span>
+      <Close size={16} aria-hidden="true" />
       <VisuallyHidden>Close dialog</VisuallyHidden>
     </button>
   ),

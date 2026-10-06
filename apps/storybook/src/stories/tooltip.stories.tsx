@@ -3,7 +3,6 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@pine-ui/react/tooltip';
 import { Button } from '@pine-ui/react/button';
 import { IconButton } from '@pine-ui/react/icon-button';
-import { Cluster } from '@pine-ui/primitives/cluster';
 
 const meta: Meta<typeof Tooltip> = {
   title: 'Overlays & Containers/Tooltip',

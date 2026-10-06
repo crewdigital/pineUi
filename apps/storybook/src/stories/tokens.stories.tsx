@@ -3,7 +3,6 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Surface } from '@pine-ui/primitives/surface';
 import { Stack } from '@pine-ui/primitives/stack';
 import { Inline } from '@pine-ui/primitives/inline';
-import { Heading } from '@pine-ui/primitives/heading';
 import { Text } from '@pine-ui/primitives/text';
 import { Box } from '@pine-ui/primitives/box';
 

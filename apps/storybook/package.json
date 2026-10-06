@@ -12,7 +12,9 @@
     "lint": "eslint ."
   },
   "devDependencies": {
+    "@pine-ui/behaviors": "workspace:*",
     "@pine-ui/build-config": "workspace:*",
+    "@pine-ui/command": "workspace:*",
     "@pine-ui/icons": "workspace:*",
     "@pine-ui/primitives": "workspace:*",
     "@pine-ui/react": "workspace:*",

@@ -6,7 +6,6 @@ import {
   AccordionTrigger,
   AccordionContent,
 } from '@pine-ui/react/accordion';
-import { Stack } from '@pine-ui/primitives/stack';
 
 const meta: Meta<typeof Accordion> = {
   title: 'Overlays & Containers/Accordion',

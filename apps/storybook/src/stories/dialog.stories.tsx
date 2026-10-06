@@ -15,8 +15,6 @@ import {
 import { Button } from '@pine-ui/react/button';
 import { TextField } from '@pine-ui/react/text-field';
 import { Stack } from '@pine-ui/primitives/stack';
-import { Cluster } from '@pine-ui/primitives/cluster';
-import { Text } from '@pine-ui/primitives/text';
 
 const meta: Meta<typeof Dialog> = {
   title: 'Overlays & Containers/Dialog',

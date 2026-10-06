@@ -2,6 +2,7 @@ import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { TextField } from '@pine-ui/react/text-field';
 import { Stack } from '@pine-ui/primitives/stack';
+import { Search } from '@pine-ui/icons';
 
 const meta: Meta<typeof TextField> = {
   title: 'Controls/TextField',
@@ -54,7 +55,7 @@ export const WithIcons: Story = {
     <Stack gap={3} style={{ maxWidth: '320px' }}>
       <TextField
         label="Search project"
-        iconStart={<span>🔍</span>}
+        iconStart={<Search size={16} />}
         placeholder="Type to search..."
       />
       <TextField
