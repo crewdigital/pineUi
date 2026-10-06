@@ -247,6 +247,10 @@ importers:
         version: 18.3.1
 
   packages/datepicker:
+    dependencies:
+      '@pine-ui/icons':
+        specifier: workspace:*
+        version: link:../icons
     devDependencies:
       '@pine-ui/testing':
         specifier: workspace:*

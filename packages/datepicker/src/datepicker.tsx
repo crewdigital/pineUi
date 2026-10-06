@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Calendar, ChevronLeft, ChevronRight, ArrowRight } from '@pine-ui/icons';
 
 export interface DateRange {
   start: Date | null;
@@ -24,86 +25,6 @@ export interface DatePickerProps {
   id?: string | undefined;
   months?: 1 | 2 | undefined;
   presets?: boolean | DatePickerPreset[] | undefined;
-}
-
-function CalendarIcon({ style }: { style?: React.CSSProperties }) {
-  return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-      style={style}
-    >
-      <rect width="18" height="18" x="3" y="4" rx="2" ry="2" />
-      <line x1="16" x2="16" y1="2" y2="6" />
-      <line x1="8" x2="8" y1="2" y2="6" />
-      <line x1="3" x2="21" y1="10" y2="10" />
-    </svg>
-  );
-}
-
-function ChevronLeftIcon({ style }: { style?: React.CSSProperties }) {
-  return (
-    <svg
-      width="12"
-      height="12"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-      style={style}
-    >
-      <path d="m15 18-6-6 6-6" />
-    </svg>
-  );
-}
-
-function ChevronRightIcon({ style }: { style?: React.CSSProperties }) {
-  return (
-    <svg
-      width="12"
-      height="12"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-      style={style}
-    >
-      <path d="m9 18 6-6-6-6" />
-    </svg>
-  );
-}
-
-function ArrowRightIcon({ style }: { style?: React.CSSProperties }) {
-  return (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-      style={style}
-    >
-      <path d="M5 12h14" />
-      <path d="m12 5 7 7-7 7" />
-    </svg>
-  );
 }
 
 export function DatePicker({
@@ -360,7 +281,8 @@ export function DatePicker({
             <span style={{ color: selectedRange.start ? '#0f172a' : '#94a3b8' }}>
               {selectedRange.start ? formatDateStr(selectedRange.start) : 'Start date'}
             </span>
-            <ArrowRightIcon
+            <ArrowRight
+              size={14}
               style={{
                 color: '#94a3b8',
                 flexShrink: 0,
@@ -417,7 +339,7 @@ export function DatePicker({
             justifyContent: 'center',
           }}
         >
-          <CalendarIcon />
+          <Calendar size={16} />
         </button>
       </div>
 
@@ -508,7 +430,8 @@ export function DatePicker({
                           justifyContent: 'center',
                         }}
                       >
-                        <ChevronLeftIcon
+                        <ChevronLeft
+                          size={14}
                           style={{
                             display: 'inline-block',
                             transform: 'scaleX(var(--pine-rtl-flip, 1))',
@@ -539,7 +462,8 @@ export function DatePicker({
                           justifyContent: 'center',
                         }}
                       >
-                        <ChevronRightIcon
+                        <ChevronRight
+                          size={14}
                           style={{
                             display: 'inline-block',
                             transform: 'scaleX(var(--pine-rtl-flip, 1))',
