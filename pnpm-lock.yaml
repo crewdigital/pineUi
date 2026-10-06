@@ -229,6 +229,9 @@ importers:
 
   packages/datagrid:
     dependencies:
+      '@pine-ui/icons':
+        specifier: workspace:*
+        version: link:../icons
       '@pine-ui/virtual-list':
         specifier: workspace:*
         version: link:../virtual-list

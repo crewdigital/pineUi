@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { ChevronUp, ChevronDown, AlertCircle } from '@pine-ui/icons';
 
 export type SortDirection = 'asc' | 'desc' | null;
 
@@ -227,23 +228,11 @@ export function DataGrid<T extends object = Record<string, unknown>>(props: Data
                     <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
                       {col.header}
                       {col.sortable && isSorted && sortDirection && (
-                        <svg
-                          width="10"
-                          height="10"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2.5"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          aria-hidden="true"
-                          style={{
-                            transform: sortDirection === 'desc' ? 'rotate(180deg)' : 'none',
-                            transition: 'transform 150ms ease',
-                          }}
-                        >
-                          <path d="m18 15-6-6-6 6" />
-                        </svg>
+                        sortDirection === 'asc' ? (
+                          <ChevronUp size={12} aria-hidden="true" style={{ color: '#2563eb' }} />
+                        ) : (
+                          <ChevronDown size={12} aria-hidden="true" style={{ color: '#2563eb' }} />
+                        )
                       )}
                     </div>
 
@@ -292,20 +281,7 @@ export function DataGrid<T extends object = Record<string, unknown>>(props: Data
                 style={{ padding: '48px 24px', textAlign: 'center' }}
               >
                 <div style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
-                  <svg
-                    width="44"
-                    height="44"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="#ef4444"
-                    strokeWidth="1.75"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <circle cx="12" cy="12" r="10" />
-                    <line x1="12" y1="8" x2="12" y2="12" />
-                    <line x1="12" y1="16" x2="12.01" y2="16" />
-                  </svg>
+                  <AlertCircle size={44} style={{ color: '#ef4444' }} />
                   <strong style={{ fontSize: '15px', color: '#1e293b' }}>
                     {errorState.title ?? 'Failed to load grid telemetry'}
                   </strong>
