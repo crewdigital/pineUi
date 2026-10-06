@@ -164,5 +164,27 @@
       "$value": "{color.neutral.950}",
       "$description": "Focus ring offset outline in dark mode"
     }
+  },
+  "shadow": {
+    "$type": "shadow",
+    "$description": "Dark-mode luminescent elevation. Drop shadows disappear on dark canvases, so depth is expressed via a 1px inner top highlight, a hairline luminous ring, and deep occlusion.",
+    "xs": {
+      "$value": "inset 0 1px 0 0 rgba(255, 255, 255, 0.05), 0 1px 2px 0 rgba(0, 0, 0, 0.5)"
+    },
+    "sm": {
+      "$value": "inset 0 1px 0 0 rgba(255, 255, 255, 0.08), 0 0 0 1px rgba(255, 255, 255, 0.04), 0 1px 3px 0 rgba(0, 0, 0, 0.6)"
+    },
+    "md": {
+      "$value": "inset 0 1px 0 0 rgba(255, 255, 255, 0.08), 0 0 0 1px rgba(255, 255, 255, 0.05), 0 4px 10px -2px rgba(0, 0, 0, 0.6)"
+    },
+    "lg": {
+      "$value": "inset 0 1px 0 0 rgba(255, 255, 255, 0.08), 0 0 0 1px rgba(255, 255, 255, 0.06), 0 12px 28px -6px rgba(0, 0, 0, 0.7)"
+    },
+    "xl": {
+      "$value": "inset 0 1px 0 0 rgba(255, 255, 255, 0.10), 0 0 0 1px rgba(255, 255, 255, 0.06), 0 24px 48px -12px rgba(0, 0, 0, 0.75)"
+    },
+    "2xl": {
+      "$value": "inset 0 1px 0 0 rgba(255, 255, 255, 0.10), 0 0 0 1px rgba(255, 255, 255, 0.07), 0 32px 72px -16px rgba(0, 0, 0, 0.8)"
+    }
   }
 }

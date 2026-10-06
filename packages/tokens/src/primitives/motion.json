@@ -3,6 +3,7 @@
     "duration": {
       "$type": "duration",
       "fastest": { "$value": "50ms" },
+      "press": { "$value": "80ms" },
       "faster": { "$value": "100ms" },
       "fast": { "$value": "150ms" },
       "normal": { "$value": "200ms" },
@@ -15,7 +16,10 @@
       "standard": { "$value": "cubic-bezier(0.2, 0.0, 0, 1.0)" },
       "decelerate": { "$value": "cubic-bezier(0.0, 0.0, 0.2, 1.0)" },
       "accelerate": { "$value": "cubic-bezier(0.4, 0.0, 1.0, 1.0)" },
-      "linear": { "$value": "linear" }
+      "linear": { "$value": "linear" },
+      "spring": { "$value": "cubic-bezier(0.34, 1.56, 0.64, 1)" },
+      "outExpo": { "$value": "cubic-bezier(0.16, 1, 0.3, 1)" },
+      "press": { "$value": "cubic-bezier(0.0, 0.0, 0.58, 1.0)" }
     }
   }
 }

@@ -1,13 +1,26 @@
 {
   "shadow": {
     "$type": "shadow",
+    "$description": "Dual-layer elevation: a tight ambient-occlusion contact shadow paired with a soft directional key-light shadow.",
     "none": { "$value": "none" },
-    "xs": { "$value": "0 1px 2px 0 rgba(0, 0, 0, 0.05)" },
-    "sm": { "$value": "0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1)" },
-    "md": { "$value": "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)" },
-    "lg": { "$value": "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)" },
-    "xl": { "$value": "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)" },
-    "2xl": { "$value": "0 25px 50px -12px rgba(0, 0, 0, 0.25)" }
+    "xs": {
+      "$value": "0 1px 1px 0 rgba(0, 0, 0, 0.04), 0 1px 2px 0 rgba(15, 23, 42, 0.06)"
+    },
+    "sm": {
+      "$value": "0 1px 2px 0 rgba(0, 0, 0, 0.04), 0 2px 4px -1px rgba(15, 23, 42, 0.08), 0 1px 3px 0 rgba(15, 23, 42, 0.06)"
+    },
+    "md": {
+      "$value": "0 1px 2px 0 rgba(0, 0, 0, 0.04), 0 4px 8px -2px rgba(15, 23, 42, 0.10), 0 2px 4px -2px rgba(15, 23, 42, 0.06)"
+    },
+    "lg": {
+      "$value": "0 1px 2px 0 rgba(0, 0, 0, 0.04), 0 12px 24px -6px rgba(15, 23, 42, 0.14), 0 4px 8px -4px rgba(15, 23, 42, 0.08)"
+    },
+    "xl": {
+      "$value": "0 1px 2px 0 rgba(0, 0, 0, 0.04), 0 24px 40px -12px rgba(15, 23, 42, 0.20), 0 8px 16px -8px rgba(15, 23, 42, 0.10)"
+    },
+    "2xl": {
+      "$value": "0 1px 2px 0 rgba(0, 0, 0, 0.04), 0 32px 64px -16px rgba(15, 23, 42, 0.28), 0 12px 24px -12px rgba(15, 23, 42, 0.14)"
+    }
   },
   "layer": {
     "$type": "number",
@@ -29,5 +42,11 @@
     "50": { "$value": "0.5" },
     "75": { "$value": "0.75" },
     "100": { "$value": "1" }
+  },
+  "blur": {
+    "$type": "custom",
+    "$description": "Frosted-glass backdrop filters for overlays and floating surfaces.",
+    "veil": { "$value": "blur(4px) saturate(120%)" },
+    "glass": { "$value": "blur(12px) saturate(180%)" }
   }
 }

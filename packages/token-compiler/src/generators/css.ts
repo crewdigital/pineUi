@@ -23,6 +23,22 @@ export function generateBaseCss(dict: TokenDictionary): string {
   }
 
   lines.push('}', '');
+
+  // Accessibility: collapse motion tokens for users who prefer reduced motion.
+  // Durations become near-instant and overshooting spring curves become linear,
+  // so components fall back to simple opacity dissolves without code changes.
+  const motionTokens = Array.from(dict.primitives.values()).filter(
+    (t) => t.type === 'duration' || (t.type === 'cubicBezier' && t.path !== 'motion.easing.linear'),
+  );
+  if (motionTokens.length > 0) {
+    lines.push('@media (prefers-reduced-motion: reduce) {', '  :root {');
+    for (const token of motionTokens) {
+      const value = token.type === 'duration' ? '1ms' : 'linear';
+      lines.push(`    ${token.cssVariable}: ${value};`);
+    }
+    lines.push('  }', '}', '');
+  }
+
   return lines.join('\n');
 }
 

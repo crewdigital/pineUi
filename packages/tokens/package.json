@@ -19,7 +19,7 @@
     "src"
   ],
   "scripts": {
-    "build": "tsc --build",
+    "build": "tsc --build && cp -r src/primitives src/semantics dist/",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "test": "vitest run"
