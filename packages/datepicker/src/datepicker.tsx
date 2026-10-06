@@ -26,6 +26,86 @@ export interface DatePickerProps {
   presets?: boolean | DatePickerPreset[] | undefined;
 }
 
+function CalendarIcon({ style }: { style?: React.CSSProperties }) {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      style={style}
+    >
+      <rect width="18" height="18" x="3" y="4" rx="2" ry="2" />
+      <line x1="16" x2="16" y1="2" y2="6" />
+      <line x1="8" x2="8" y1="2" y2="6" />
+      <line x1="3" x2="21" y1="10" y2="10" />
+    </svg>
+  );
+}
+
+function ChevronLeftIcon({ style }: { style?: React.CSSProperties }) {
+  return (
+    <svg
+      width="12"
+      height="12"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      style={style}
+    >
+      <path d="m15 18-6-6 6-6" />
+    </svg>
+  );
+}
+
+function ChevronRightIcon({ style }: { style?: React.CSSProperties }) {
+  return (
+    <svg
+      width="12"
+      height="12"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      style={style}
+    >
+      <path d="m9 18 6-6-6-6" />
+    </svg>
+  );
+}
+
+function ArrowRightIcon({ style }: { style?: React.CSSProperties }) {
+  return (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      style={style}
+    >
+      <path d="M5 12h14" />
+      <path d="m12 5 7 7-7 7" />
+    </svg>
+  );
+}
+
 export function DatePicker({
   mode = 'single',
   value: controlledValue,
@@ -144,10 +224,10 @@ export function DatePicker({
       return formatDateStr(selectedDate);
     }
     if (selectedRange.start && selectedRange.end) {
-      return `${formatDateStr(selectedRange.start)} - ${formatDateStr(selectedRange.end)}`;
+      return `${formatDateStr(selectedRange.start)} to ${formatDateStr(selectedRange.end)}`;
     }
     if (selectedRange.start) {
-      return `${formatDateStr(selectedRange.start)} - ...`;
+      return formatDateStr(selectedRange.start);
     }
     return '';
   }, [mode, selectedDate, selectedRange]);
@@ -260,28 +340,64 @@ export function DatePicker({
           border: '1px solid #cbd5e1',
           borderRadius: '6px',
           backgroundColor: disabled ? '#f8fafc' : '#ffffff',
-          width: mode === 'range' ? '240px' : '180px',
+          minWidth: mode === 'range' ? '300px' : '180px',
         }}
       >
-        <input
-          id={inputId}
-          type="text"
-          readOnly
-          disabled={disabled}
-          value={formattedDisplayValue}
-          placeholder={mode === 'range' ? 'YYYY-MM-DD - YYYY-MM-DD' : placeholder}
-          onClick={() => !disabled && setIsOpen(!isOpen)}
-          style={{
-            border: 'none',
-            outline: 'none',
-            padding: '8px 12px',
-            fontSize: '13px',
-            cursor: disabled ? 'not-allowed' : 'pointer',
-            backgroundColor: 'transparent',
-            flex: 1,
-            color: '#0f172a',
-          }}
-        />
+        {mode === 'range' ? (
+          <div
+            onClick={() => !disabled && setIsOpen(!isOpen)}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              flex: 1,
+              padding: '7px 12px',
+              fontSize: '13px',
+              cursor: disabled ? 'not-allowed' : 'pointer',
+              userSelect: 'none',
+              gap: '6px',
+            }}
+          >
+            <span style={{ color: selectedRange.start ? '#0f172a' : '#94a3b8' }}>
+              {selectedRange.start ? formatDateStr(selectedRange.start) : 'Start date'}
+            </span>
+            <ArrowRightIcon
+              style={{
+                color: '#94a3b8',
+                flexShrink: 0,
+                transform: 'scaleX(var(--pine-rtl-flip, 1))',
+              }}
+            />
+            <span style={{ color: selectedRange.end ? '#0f172a' : '#94a3b8' }}>
+              {selectedRange.end ? formatDateStr(selectedRange.end) : 'End date'}
+            </span>
+            <input
+              id={inputId}
+              type="hidden"
+              value={formattedDisplayValue}
+              readOnly
+            />
+          </div>
+        ) : (
+          <input
+            id={inputId}
+            type="text"
+            readOnly
+            disabled={disabled}
+            value={formattedDisplayValue}
+            placeholder={placeholder}
+            onClick={() => !disabled && setIsOpen(!isOpen)}
+            style={{
+              border: 'none',
+              outline: 'none',
+              padding: '8px 12px',
+              fontSize: '13px',
+              cursor: disabled ? 'not-allowed' : 'pointer',
+              backgroundColor: 'transparent',
+              flex: 1,
+              color: '#0f172a',
+            }}
+          />
+        )}
 
         <button
           type="button"
@@ -296,25 +412,12 @@ export function DatePicker({
             padding: '8px 10px',
             cursor: disabled ? 'not-allowed' : 'pointer',
             color: '#64748b',
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center',
           }}
         >
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-            style={{ display: 'block' }}
-          >
-            <rect width="18" height="18" x="3" y="4" rx="2" ry="2" />
-            <line x1="16" y1="2" x2="16" y2="6" />
-            <line x1="8" y1="2" x2="8" y2="6" />
-            <line x1="3" y1="10" x2="21" y2="10" />
-          </svg>
+          <CalendarIcon />
         </button>
       </div>
 
@@ -400,22 +503,17 @@ export function DatePicker({
                           borderRadius: '4px',
                           padding: '3px 8px',
                           cursor: 'pointer',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
                         }}
                       >
-                        <svg
-                          width="12"
-                          height="12"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2.5"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          aria-hidden="true"
-                          style={{ display: 'inline-block', transform: 'scaleX(var(--pine-rtl-flip, 1))' }}
-                        >
-                          <path d="m15 18-6-6 6-6" />
-                        </svg>
+                        <ChevronLeftIcon
+                          style={{
+                            display: 'inline-block',
+                            transform: 'scaleX(var(--pine-rtl-flip, 1))',
+                          }}
+                        />
                       </button>
                     ) : (
                       <div style={{ width: '28px' }} />
@@ -436,22 +534,17 @@ export function DatePicker({
                           borderRadius: '4px',
                           padding: '3px 8px',
                           cursor: 'pointer',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
                         }}
                       >
-                        <svg
-                          width="12"
-                          height="12"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2.5"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          aria-hidden="true"
-                          style={{ display: 'inline-block', transform: 'scaleX(var(--pine-rtl-flip, 1))' }}
-                        >
-                          <path d="m9 18 6-6-6-6" />
-                        </svg>
+                        <ChevronRightIcon
+                          style={{
+                            display: 'inline-block',
+                            transform: 'scaleX(var(--pine-rtl-flip, 1))',
+                          }}
+                        />
                       </button>
                     ) : (
                       <div style={{ width: '28px' }} />

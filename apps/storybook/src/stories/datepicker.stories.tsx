@@ -51,10 +51,27 @@ export const DateRangeSelection: Story = {
             onRangeChange={setRange}
             placeholder="Select date range"
           />
-          <div style={{ marginTop: '16px', fontSize: '13px', color: '#64748b' }}>
-            <span>Selected Range: </span>
+          <div style={{ marginTop: '16px', fontSize: '13px', color: '#64748b', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span>Selected Range:</span>
             <strong style={{ color: '#0f172a' }}>
-              {range.start ? range.start.toLocaleDateString() : 'None'} -{' '}
+              {range.start ? range.start.toLocaleDateString() : 'None'}
+            </strong>
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+              style={{ color: '#94a3b8' }}
+            >
+              <path d="M5 12h14" />
+              <path d="m12 5 7 7-7 7" />
+            </svg>
+            <strong style={{ color: '#0f172a' }}>
               {range.end ? range.end.toLocaleDateString() : 'None'}
             </strong>
           </div>
