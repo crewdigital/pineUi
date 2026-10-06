@@ -59,12 +59,21 @@ importers:
 
   apps/storybook:
     devDependencies:
+      '@pine-ui/behaviors':
+        specifier: workspace:*
+        version: link:../../packages/behaviors
       '@pine-ui/build-config':
         specifier: workspace:*
         version: link:../../tooling/build
       '@pine-ui/command':
         specifier: workspace:*
         version: link:../../packages/command
+      '@pine-ui/datagrid':
+        specifier: workspace:*
+        version: link:../../packages/datagrid
+      '@pine-ui/datepicker':
+        specifier: workspace:*
+        version: link:../../packages/datepicker
       '@pine-ui/icons':
         specifier: workspace:*
         version: link:../../packages/icons
