@@ -84,7 +84,7 @@ describe('Tabs', () => {
 
   it('supports controlled mode', () => {
     const onValueChange = vi.fn();
-    const { rerender } = render(
+    render(
       <Tabs value="tab1" defaultValue="tab1" onValueChange={onValueChange}>
         <TabList>
           <Tab value="tab1">Tab 1</Tab>

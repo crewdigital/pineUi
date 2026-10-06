@@ -48,9 +48,12 @@ const styles = stylex.create({
     userSelect: 'none',
     outline: 'none',
     padding: 0,
-    transitionProperty: 'background-color, border-color, color, box-shadow',
+    transitionProperty: 'background-color, border-color, color, box-shadow, transform',
     transitionDuration: vars.motionDurationFast,
     transitionTimingFunction: vars.motionEasingStandard,
+    ':active': {
+      transform: 'scale(0.96)',
+    },
     ':focus-visible': {
       boxShadow: `0 0 0 2px ${vars.focusOffset}, 0 0 0 4px ${vars.focusRing}`,
     },

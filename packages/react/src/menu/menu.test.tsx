@@ -91,7 +91,7 @@ describe('Menu', () => {
             <MenuLabel>File</MenuLabel>
             <MenuItem>
               <span>Save</span>
-              <MenuShortcut>⌘S</MenuShortcut>
+              <MenuShortcut>Ctrl+S</MenuShortcut>
             </MenuItem>
           </MenuGroup>
           <MenuSeparator />
@@ -103,7 +103,7 @@ describe('Menu', () => {
     expect(screen.getByRole('group')).toBeDefined();
     expect(screen.getByText('File')).toBeDefined();
     expect(screen.getByRole('separator')).toBeDefined();
-    expect(screen.getByText('⌘S')).toBeDefined();
+    expect(screen.getByText('Ctrl+S')).toBeDefined();
   });
 
   it('closes menu on Escape key press', async () => {

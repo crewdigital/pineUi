@@ -9,10 +9,11 @@ import { useStableId } from '@pine-ui/behaviors/aria-linking';
 import { useEscapeKey } from '@pine-ui/behaviors/dismiss';
 import { useFocusTrap } from '@pine-ui/behaviors/focus-trap';
 import { Portal } from '@pine-ui/behaviors/portal';
+import { useIsRtl } from '@pine-ui/behaviors/direction';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
-export type DrawerSide = 'top' | 'right' | 'bottom' | 'left';
+export type DrawerSide = 'top' | 'right' | 'bottom' | 'left' | 'start' | 'end';
 
 export interface DrawerProps {
   /** Controlled open state */
@@ -112,7 +113,7 @@ const styles = stylex.create({
     inset: 0,
     zIndex: 999,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    backdropFilter: 'blur(4px)',
+    backdropFilter: 'blur(12px) saturate(180%)',
     transitionProperty: 'opacity',
     transitionDuration: vars.motionDurationFast,
     transitionTimingFunction: vars.motionEasingStandard,
@@ -425,12 +426,20 @@ export const DrawerContent = React.forwardRef<HTMLDivElement, DrawerContentProps
       [trapContainerRef, forwardedRef]
     );
 
+    const isRtl = useIsRtl(undefined, trapContainerRef);
+
+    const resolvedSide = React.useMemo(() => {
+      if (side === 'start') return isRtl ? 'right' : 'left';
+      if (side === 'end') return isRtl ? 'left' : 'right';
+      return side;
+    }, [side, isRtl]);
+
     const sideStyle =
-      side === 'left'
+      resolvedSide === 'left'
         ? styles.sideLeft
-        : side === 'top'
+        : resolvedSide === 'top'
         ? styles.sideTop
-        : side === 'bottom'
+        : resolvedSide === 'bottom'
         ? styles.sideBottom
         : styles.sideRight;
 

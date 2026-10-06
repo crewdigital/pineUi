@@ -150,14 +150,14 @@ const styles = stylex.create({
     left: '100%',
   },
   alignStart: {
-    left: 0,
+    insetInlineStart: 0,
   },
   alignCenter: {
     left: '50%',
     transform: 'translateX(-50%)',
   },
   alignEnd: {
-    right: 0,
+    insetInlineEnd: 0,
   },
   alignStartVertical: {
     top: 0,
@@ -174,8 +174,8 @@ const styles = stylex.create({
     width: '100%',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingLeft: vars.space3,
-    paddingRight: vars.space3,
+    paddingInlineStart: vars.space3,
+    paddingInlineEnd: vars.space3,
     paddingTop: vars.space2,
     paddingBottom: vars.space2,
     fontSize: vars.fontSizeSm,
@@ -185,13 +185,16 @@ const styles = stylex.create({
     border: 'none',
     borderRadius: vars.radiusSm,
     cursor: 'pointer',
-    textAlign: 'left',
+    textAlign: 'start',
     outline: 'none',
-    transitionProperty: 'background-color, color',
+    transitionProperty: 'background-color, color, transform',
     transitionDuration: vars.motionDurationFast,
     transitionTimingFunction: vars.motionEasingStandard,
     ':hover': {
       backgroundColor: vars.actionSecondaryBackgroundHover,
+    },
+    ':active': {
+      transform: 'scale(0.99)',
     },
     ':focus-visible': {
       backgroundColor: vars.actionSecondaryBackgroundActive,
@@ -211,8 +214,8 @@ const styles = stylex.create({
     width: '100%',
   },
   label: {
-    paddingLeft: vars.space3,
-    paddingRight: vars.space3,
+    paddingInlineStart: vars.space3,
+    paddingInlineEnd: vars.space3,
     paddingTop: vars.space2,
     paddingBottom: vars.space1,
     fontSize: vars.fontSizeXs,
@@ -226,12 +229,12 @@ const styles = stylex.create({
     backgroundColor: vars.borderDefault,
     marginTop: vars.space1,
     marginBottom: vars.space1,
-    marginLeft: vars.space1,
-    marginRight: vars.space1,
+    marginInlineStart: vars.space1,
+    marginInlineEnd: vars.space1,
   },
   shortcut: {
-    marginLeft: 'auto',
-    paddingLeft: vars.space4,
+    marginInlineStart: 'auto',
+    paddingInlineStart: vars.space4,
     fontSize: vars.fontSizeXs,
     color: vars.foregroundSecondary,
     letterSpacing: '0.1em',
@@ -435,12 +438,12 @@ export const MenuContent = React.forwardRef<HTMLDivElement, MenuContentProps>(
         if (items.length === 0) return;
         if (focusLastOnOpen.current) {
           items[items.length - 1]?.focus();
-        } else {
+        } else if (focusFirstOnOpen.current) {
           items[0]?.focus();
         }
       });
       return () => cancelAnimationFrame(frame);
-    }, [open, getMenuItems, focusLastOnOpen]);
+    }, [open, getMenuItems, focusLastOnOpen, focusFirstOnOpen]);
 
     // Handle keyboard navigation between items
     const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {

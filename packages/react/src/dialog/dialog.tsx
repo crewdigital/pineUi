@@ -108,7 +108,7 @@ const styles = stylex.create({
     inset: 0,
     zIndex: 999,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    backdropFilter: 'blur(4px)',
+    backdropFilter: 'blur(12px) saturate(180%)',
     animationDuration: vars.motionDurationFast,
     animationTimingFunction: vars.motionEasingStandard,
   },

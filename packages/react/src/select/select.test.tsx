@@ -113,4 +113,37 @@ describe('Select', () => {
     expect(hiddenInput?.getAttribute('name')).toBe('theme');
     expect(hiddenInput?.getAttribute('value')).toBe('dark');
   });
+
+  it('supports multiple mode with tags/chips and removal', () => {
+    const handleValuesChange = vi.fn();
+    render(
+      <Select multiple defaultValues={['apple']} onValuesChange={handleValuesChange}>
+        <SelectTrigger>
+          <SelectValue placeholder="Pick fruits" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="apple">Apple</SelectItem>
+          <SelectItem value="banana">Banana</SelectItem>
+          <SelectItem value="cherry">Cherry</SelectItem>
+        </SelectContent>
+      </Select>
+    );
+
+    // Initial chip for apple (prior to listbox mount)
+    expect(screen.getByText('apple')).toBeDefined();
+    const trigger = screen.getByRole('combobox');
+    fireEvent.click(trigger);
+
+    // Select Banana
+    const banana = screen.getByRole('option', { name: 'Banana' });
+    fireEvent.click(banana);
+
+    expect(handleValuesChange).toHaveBeenCalledWith(['apple', 'banana']);
+
+    // Remove apple chip (now registered as Apple)
+    const removeApple = screen.getByRole('button', { name: 'Remove Apple' });
+    fireEvent.click(removeApple);
+
+    expect(handleValuesChange).toHaveBeenCalledWith(['banana']);
+  });
 });

@@ -243,7 +243,6 @@ export const Radio = React.forwardRef<HTMLInputElement, RadioProps>(
     const disabled = passedDisabled ?? group?.disabled ?? false;
     const size = passedSize ?? group?.size ?? 'md';
 
-    const isControlled = passedChecked !== undefined || group?.value !== undefined;
     const isChecked = group?.value !== undefined
       ? group.value === value
       : passedChecked !== undefined
@@ -338,13 +337,16 @@ export function RadioGroup({
   const isControlled = passedValue !== undefined;
   const currentValue = isControlled ? passedValue : valueState;
 
-  const handleRadioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.value;
-    if (!isControlled) {
-      setValueState(val);
-    }
-    onChange?.(val, e);
-  };
+  const handleRadioChange = React.useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const val = e.target.value;
+      if (!isControlled) {
+        setValueState(val);
+      }
+      onChange?.(val, e);
+    },
+    [isControlled, onChange]
+  );
 
   const contextValue = React.useMemo(
     () => ({
@@ -354,7 +356,7 @@ export function RadioGroup({
       disabled,
       size,
     }),
-    [name, currentValue, disabled, size]
+    [name, currentValue, handleRadioChange, disabled, size]
   );
 
   return (

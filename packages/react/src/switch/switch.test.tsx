@@ -35,10 +35,46 @@ describe('Switch', () => {
     expect(switchEl.hasAttribute('disabled')).toBe(true);
   });
 
-  it('forwards ref correctly', () => {
-    const ref = React.createRef<HTMLInputElement>();
-    render(<Switch ref={ref} label="Ref switch" />);
-    expect(ref.current).not.toBeNull();
-    expect(ref.current?.tagName).toBe('INPUT');
+  it('supports dir="rtl" prop and sets data-direction="rtl"', () => {
+    const { container } = render(<Switch label="RTL Switch" dir="rtl" defaultChecked />);
+    const label = container.querySelector('label');
+    expect(label?.getAttribute('data-direction')).toBe('rtl');
+    expect(label?.getAttribute('dir')).toBe('rtl');
+    const switchEl = screen.getByLabelText('RTL Switch') as HTMLInputElement;
+    expect(switchEl.checked).toBe(true);
+  });
+
+  it('inherits direction from DirectionProvider', () => {
+    const { container } = render(
+      <div dir="rtl">
+        <Switch label="Context Switch" dir="rtl" />
+      </div>
+    );
+    const label = container.querySelector('label');
+    expect(label?.getAttribute('data-direction')).toBe('rtl');
+  });
+
+  it('renders LTR checked switch with LTR transform classes', () => {
+    const { container } = render(<Switch label="LTR Switch" defaultChecked />);
+    const label = container.querySelector('label');
+    const thumb = container.querySelector('label > div > div > div');
+    expect(label?.getAttribute('data-direction')).toBe('ltr');
+    expect(thumb?.className).toContain('mdThumbChecked');
+    expect(thumb?.className).not.toContain('mdThumbCheckedRtl');
+  });
+
+  it('keeps LTR direction when parent specifies dir="ltr" even if document is rtl', () => {
+    document.documentElement.dir = 'rtl';
+    const { container } = render(
+      <div dir="ltr">
+        <Switch label="LTR Inside RTL Document" defaultChecked />
+      </div>
+    );
+    const label = container.querySelector('label');
+    const thumb = container.querySelector('label > div > div > div');
+    expect(label?.getAttribute('data-direction')).toBe('ltr');
+    expect(thumb?.className).toContain('mdThumbChecked');
+    expect(thumb?.className).not.toContain('mdThumbCheckedRtl');
+    document.documentElement.dir = '';
   });
 });

@@ -93,6 +93,7 @@ const styles = stylex.create({
     borderColor: vars.borderDefault,
     borderRadius: vars.radiusMd,
     boxShadow: vars.shadowLg,
+    backdropFilter: 'blur(12px) saturate(180%)',
     padding: vars.space4,
     outline: 'none',
     animationDuration: vars.motionDurationFast,
@@ -111,14 +112,14 @@ const styles = stylex.create({
     left: '100%',
   },
   alignStart: {
-    left: 0,
+    insetInlineStart: 0,
   },
   alignCenter: {
     left: '50%',
     transform: 'translateX(-50%)',
   },
   alignEnd: {
-    right: 0,
+    insetInlineEnd: 0,
   },
   alignStartVertical: {
     top: 0,

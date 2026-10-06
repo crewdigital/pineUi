@@ -76,8 +76,8 @@ const styles = stylex.create({
     justifyContent: 'center',
     minWidth: '36px',
     height: '36px',
-    paddingLeft: vars.space3,
-    paddingRight: vars.space3,
+    paddingInlineStart: vars.space3,
+    paddingInlineEnd: vars.space3,
     fontSize: vars.fontSizeSm,
     fontWeight: vars.fontWeightMedium,
     borderRadius: vars.radiusSm,
@@ -113,6 +113,14 @@ const styles = stylex.create({
   },
   arrowButton: {
     gap: vars.space1,
+  },
+  arrowIcon: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    ':is([dir="rtl"] *)': {
+      transform: 'scaleX(-1)',
+    },
   },
   ellipsis: {
     display: 'inline-flex',
@@ -221,19 +229,21 @@ export const PaginationPrevious = React.forwardRef<HTMLButtonElement, Pagination
         styleX={[styles.arrowButton, styleXProp]}
         {...restProps}
       >
-        <svg
-          width={16}
-          height={16}
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth={2}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden="true"
-        >
-          <polyline points="15 18 9 12 15 6" />
-        </svg>
+        <span {...stylex.props(styles.arrowIcon)}>
+          <svg
+            width={16}
+            height={16}
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <polyline points="15 18 9 12 15 6" />
+          </svg>
+        </span>
         <span>{children ?? 'Previous'}</span>
       </PaginationLink>
     );
@@ -255,19 +265,21 @@ export const PaginationNext = React.forwardRef<HTMLButtonElement, PaginationNext
         {...restProps}
       >
         <span>{children ?? 'Next'}</span>
-        <svg
-          width={16}
-          height={16}
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth={2}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden="true"
-        >
-          <polyline points="9 18 15 12 9 6" />
-        </svg>
+        <span {...stylex.props(styles.arrowIcon)}>
+          <svg
+            width={16}
+            height={16}
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <polyline points="9 18 15 12 9 6" />
+          </svg>
+        </span>
       </PaginationLink>
     );
   }

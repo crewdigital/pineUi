@@ -23,6 +23,14 @@ export interface SelectProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 
   defaultValue?: string;
   /** Callback fired when selected value changes */
   onValueChange?: (value: string) => void;
+  /** Whether multiple options can be selected */
+  multiple?: boolean;
+  /** Controlled selected values in multiple mode */
+  values?: string[];
+  /** Default selected values in multiple mode */
+  defaultValues?: string[];
+  /** Callback fired when selected values change in multiple mode */
+  onValuesChange?: (values: string[]) => void;
   /** Controlled open state */
   open?: boolean;
   /** Default open state in uncontrolled mode */
@@ -100,6 +108,10 @@ export interface SelectSeparatorProps
 interface SelectContextValue {
   value: string;
   setValue: (value: string) => void;
+  multiple: boolean;
+  values: string[];
+  setValues: (values: string[]) => void;
+  toggleValue: (val: string) => void;
   open: boolean;
   setOpen: (next: boolean | ((prev: boolean) => boolean)) => void;
   triggerRef: React.MutableRefObject<HTMLButtonElement | null>;
@@ -108,6 +120,7 @@ interface SelectContextValue {
   disabled: boolean;
   selectedLabel: React.ReactNode;
   setSelectedLabel: (label: React.ReactNode) => void;
+  optionsMap: React.MutableRefObject<Map<string, React.ReactNode>>;
   registerOption: (val: string, label: React.ReactNode) => void;
   unregisterOption: (val: string) => void;
 }
@@ -129,8 +142,8 @@ const styles = stylex.create({
     justifyContent: 'space-between',
     width: '100%',
     minHeight: '38px',
-    paddingLeft: vars.space3,
-    paddingRight: vars.space3,
+    paddingInlineStart: vars.space3,
+    paddingInlineEnd: vars.space3,
     paddingTop: vars.space2,
     paddingBottom: vars.space2,
     fontSize: vars.fontSizeSm,
@@ -169,14 +182,14 @@ const styles = stylex.create({
     color: vars.foregroundSecondary,
   },
   icon: {
-    marginLeft: vars.space2,
+    marginInlineStart: vars.space2,
     flexShrink: 0,
     color: vars.foregroundSecondary,
   },
   content: {
     position: 'absolute',
     top: '100%',
-    left: 0,
+    insetInlineStart: 0,
     zIndex: 1000,
     minWidth: '100%',
     maxHeight: '260px',
@@ -197,8 +210,8 @@ const styles = stylex.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     width: '100%',
-    paddingLeft: vars.space3,
-    paddingRight: vars.space3,
+    paddingInlineStart: vars.space3,
+    paddingInlineEnd: vars.space3,
     paddingTop: vars.space2,
     paddingBottom: vars.space2,
     fontSize: vars.fontSizeSm,
@@ -232,8 +245,8 @@ const styles = stylex.create({
     width: '100%',
   },
   label: {
-    paddingLeft: vars.space3,
-    paddingRight: vars.space3,
+    paddingInlineStart: vars.space3,
+    paddingInlineEnd: vars.space3,
     paddingTop: vars.space2,
     paddingBottom: vars.space1,
     fontSize: vars.fontSizeXs,
@@ -248,6 +261,51 @@ const styles = stylex.create({
     marginTop: vars.space1,
     marginBottom: vars.space1,
   },
+  chipContainer: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: vars.space1,
+    alignItems: 'center',
+  },
+  chip: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: vars.space1,
+    paddingInlineStart: vars.space2,
+    paddingInlineEnd: vars.space1,
+    paddingTop: '2px',
+    paddingBottom: '2px',
+    borderRadius: vars.radiusSm,
+    backgroundColor: vars.actionSecondaryBackground,
+    color: vars.foregroundPrimary,
+    fontSize: vars.fontSizeXs,
+    fontWeight: vars.fontWeightMedium,
+    lineHeight: 1,
+    borderWidth: vars.borderWidth1,
+    borderStyle: 'solid',
+    borderColor: vars.borderDefault,
+  },
+  chipRemoveButton: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    background: 'none',
+    border: 'none',
+    padding: 0,
+    margin: 0,
+    cursor: 'pointer',
+    color: vars.foregroundMuted,
+    borderRadius: vars.radiusFull,
+    width: '14px',
+    height: '14px',
+    lineHeight: 1,
+    fontSize: '10px',
+    outline: 'none',
+    ':hover': {
+      color: vars.feedbackDangerForeground,
+      backgroundColor: vars.feedbackDangerBackground,
+    },
+  },
 });
 
 // ─── Select Root ─────────────────────────────────────────────────────────────
@@ -258,6 +316,10 @@ export const Select = React.forwardRef<HTMLDivElement, SelectProps>(
       value: valueProp,
       defaultValue = '',
       onValueChange,
+      multiple = false,
+      values: valuesProp,
+      defaultValues,
+      onValuesChange,
       open: openProp,
       defaultOpen = false,
       onOpenChange,
@@ -275,6 +337,24 @@ export const Select = React.forwardRef<HTMLDivElement, SelectProps>(
       defaultProp: defaultValue,
       onChange: onValueChange,
     });
+
+    const [values, setValues] = useControllableState<string[]>({
+      prop: valuesProp,
+      defaultProp: defaultValues ?? [],
+      onChange: onValuesChange,
+    });
+
+    const toggleValue = React.useCallback(
+      (val: string) => {
+        setValues((prev) => {
+          const arr = prev ?? [];
+          return arr.includes(val)
+            ? arr.filter((v) => v !== val)
+            : [...arr, val];
+        });
+      },
+      [setValues]
+    );
 
     const [open, setOpen] = useControllableState({
       prop: openProp,
@@ -314,6 +394,10 @@ export const Select = React.forwardRef<HTMLDivElement, SelectProps>(
         value={{
           value,
           setValue,
+          multiple,
+          values: values ?? [],
+          setValues,
+          toggleValue,
           open,
           setOpen,
           triggerRef,
@@ -322,6 +406,7 @@ export const Select = React.forwardRef<HTMLDivElement, SelectProps>(
           disabled,
           selectedLabel,
           setSelectedLabel,
+          optionsMap,
           registerOption,
           unregisterOption,
         }}
@@ -336,9 +421,8 @@ export const Select = React.forwardRef<HTMLDivElement, SelectProps>(
             <input
               type="hidden"
               name={name}
-              value={value}
+              value={multiple ? (values ?? []).join(',') : value}
               required={required}
-              disabled={disabled}
             />
           )}
         </div>
@@ -441,7 +525,70 @@ export const SelectValue = React.forwardRef<HTMLSpanElement, SelectValueProps>(
     { placeholder = 'Select an option...', styleX: styleXProp, ...restProps },
     ref
   ) {
-    const { selectedLabel } = useSelectContext('SelectValue');
+    const { multiple, values, toggleValue, optionsMap, selectedLabel } =
+      useSelectContext('SelectValue');
+
+    if (multiple) {
+      if (values.length === 0) {
+        return (
+          <span
+            ref={ref}
+            {...stylex.props(styles.value, styles.placeholder, styleXProp)}
+            {...restProps}
+          >
+            {placeholder}
+          </span>
+        );
+      }
+      return (
+        <span
+          ref={ref}
+          {...stylex.props(styles.chipContainer, styleXProp)}
+          {...restProps}
+        >
+          {values.map((val) => {
+            const label = optionsMap.current.get(val) ?? val;
+            return (
+              <span key={val} {...stylex.props(styles.chip)}>
+                <span>{label}</span>
+                <span
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`Remove ${typeof label === 'string' ? label : val}`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleValue(val);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ' || e.key === 'Backspace' || e.key === 'Delete') {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      toggleValue(val);
+                    }
+                  }}
+                  {...stylex.props(styles.chipRemoveButton)}
+                >
+                  <svg
+                    width="10"
+                    height="10"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                    style={{ display: 'block' }}
+                  >
+                    <path d="M18 6 6 18M6 6l12 12" />
+                  </svg>
+                </span>
+              </span>
+            );
+          })}
+        </span>
+      );
+    }
 
     return (
       <span
@@ -628,13 +775,18 @@ export const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
     const {
       value,
       setValue,
+      multiple,
+      values,
+      toggleValue,
       setOpen,
       triggerRef,
       registerOption,
       unregisterOption,
     } = useSelectContext('SelectItem');
 
-    const isSelected = value === itemValue;
+    const isSelected = multiple
+      ? values.includes(itemValue)
+      : value === itemValue;
 
     React.useEffect(() => {
       registerOption(itemValue, children);
@@ -643,9 +795,13 @@ export const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
 
     const handleSelect = () => {
       if (disabled) return;
-      setValue(itemValue);
-      setOpen(false);
-      triggerRef.current?.focus();
+      if (multiple) {
+        toggleValue(itemValue);
+      } else {
+        setValue(itemValue);
+        setOpen(false);
+        triggerRef.current?.focus();
+      }
     };
 
     const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {

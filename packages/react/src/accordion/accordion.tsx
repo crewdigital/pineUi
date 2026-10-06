@@ -164,7 +164,7 @@ const styles = stylex.create({
 // ─── Component Definitions ───────────────────────────────────────────────────
 
 export function Accordion(props: AccordionProps) {
-  const { type = 'single', children, styleX: styleXProp, ...restProps } = props;
+  const { type = 'single', children, styleX: styleXProp } = props;
 
   if (type === 'multiple') {
     return (

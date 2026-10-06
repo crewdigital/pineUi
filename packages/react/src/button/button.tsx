@@ -57,9 +57,12 @@ const styles = stylex.create({
     whiteSpace: 'nowrap',
     textDecoration: 'none',
     outline: 'none',
-    transitionProperty: 'background-color, border-color, color, box-shadow',
+    transitionProperty: 'background-color, border-color, color, box-shadow, transform',
     transitionDuration: vars.motionDurationFast,
     transitionTimingFunction: vars.motionEasingStandard,
+    ':active': {
+      transform: 'scale(0.98)',
+    },
     ':focus-visible': {
       boxShadow: `0 0 0 2px ${vars.focusOffset}, 0 0 0 4px ${vars.focusRing}`,
     },

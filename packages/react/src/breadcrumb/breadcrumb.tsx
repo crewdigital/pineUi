@@ -99,6 +99,9 @@ const styles = stylex.create({
     alignItems: 'center',
     color: vars.foregroundMuted,
     userSelect: 'none',
+    ':is([dir="rtl"] *)': {
+      transform: 'scaleX(-1)',
+    },
   },
   ellipsis: {
     display: 'inline-flex',

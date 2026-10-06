@@ -3,6 +3,7 @@
 import * as React from 'react';
 import * as stylex from '@stylexjs/stylex';
 import { vars } from '@pine-ui/stylex/vars.stylex';
+import { useIsRtl, type Direction } from '@pine-ui/behaviors';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -19,6 +20,8 @@ export interface BaseSwitchProps {
   size?: SwitchSize;
   /** Error state */
   error?: boolean;
+  /** Reading/layout direction ('ltr' or 'rtl') */
+  dir?: Direction | undefined;
   /** StyleX override prop */
   styleX?: stylex.StyleXStyles;
 }
@@ -83,6 +86,11 @@ const styles = stylex.create({
     backgroundColor: vars.backgroundSurfaceDisabled,
   },
 
+  trackCheckedDisabled: {
+    backgroundColor: vars.actionPrimaryBackground,
+    opacity: vars.opacity50,
+  },
+
   focusRing: {
     ':focus-within': {
       borderRadius: vars.radiusFull,
@@ -103,14 +111,17 @@ const styles = stylex.create({
   smTrack: { width: '32px', height: '18px' },
   smThumb: { width: '14px', height: '14px' },
   smThumbChecked: { transform: 'translateX(14px)' },
+  smThumbCheckedRtl: { transform: 'translateX(-14px)' },
 
   mdTrack: { width: '44px', height: '24px' },
   mdThumb: { width: '20px', height: '20px' },
   mdThumbChecked: { transform: 'translateX(20px)' },
+  mdThumbCheckedRtl: { transform: 'translateX(-20px)' },
 
   lgTrack: { width: '56px', height: '30px' },
   lgThumb: { width: '26px', height: '26px' },
   lgThumbChecked: { transform: 'translateX(26px)' },
+  lgThumbCheckedRtl: { transform: 'translateX(-26px)' },
 
   textGroup: {
     display: 'inline-flex',
@@ -151,6 +162,7 @@ export const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(
       defaultChecked,
       size = 'md',
       disabled = false,
+      dir,
       styleX,
       onChange,
       ...restProps
@@ -159,6 +171,8 @@ export const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(
   ) {
     const generatedId = React.useId();
     const id = passedId ?? generatedId;
+    const labelRef = React.useRef<HTMLLabelElement | null>(null);
+    const isRtl = useIsRtl(dir, labelRef);
 
     const [checkedState, setCheckedState] = React.useState(
       Boolean(passedChecked ?? defaultChecked)
@@ -186,7 +200,10 @@ export const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(
 
     return (
       <label
+        ref={labelRef}
         htmlFor={id}
+        dir={dir}
+        data-direction={isRtl ? 'rtl' : 'ltr'}
         {...stylex.props(
           styles.container,
           disabled && styles.containerDisabled,
@@ -213,14 +230,14 @@ export const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(
               styles.track,
               styles[`${size}Track`],
               isChecked && styles.trackChecked,
-              disabled && styles.trackDisabled
+              disabled && (isChecked ? styles.trackCheckedDisabled : styles.trackDisabled)
             )}
           >
             <div
               {...stylex.props(
                 styles.thumb,
                 styles[`${size}Thumb`],
-                isChecked && styles[`${size}ThumbChecked`]
+                isChecked && (isRtl ? styles[`${size}ThumbCheckedRtl`] : styles[`${size}ThumbChecked`])
               )}
             />
           </div>

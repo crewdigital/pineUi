@@ -115,13 +115,13 @@ const styles = stylex.create({
     alignItems: 'center',
   },
   groupItem: {
-    marginLeft: '-8px',
+    marginInlineStart: '-8px',
     borderWidth: vars.borderWidth2,
     borderStyle: 'solid',
     borderColor: vars.backgroundSurface,
   },
   firstGroupItem: {
-    marginLeft: 0,
+    marginInlineStart: 0,
   },
   excessBadge: {
     display: 'inline-flex',
@@ -134,7 +134,7 @@ const styles = stylex.create({
     fontFamily: vars.fontFamilySans,
     fontSize: vars.fontSizeXs,
     fontWeight: vars.fontWeightSemibold,
-    marginLeft: '-8px',
+    marginInlineStart: '-8px',
     borderWidth: vars.borderWidth2,
     borderStyle: 'solid',
     borderColor: vars.backgroundSurface,

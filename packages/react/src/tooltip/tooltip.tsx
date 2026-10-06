@@ -106,14 +106,14 @@ const styles = stylex.create({
     left: '100%',
   },
   alignStart: {
-    left: 0,
+    insetInlineStart: 0,
   },
   alignCenter: {
     left: '50%',
     transform: 'translateX(-50%)',
   },
   alignEnd: {
-    right: 0,
+    insetInlineEnd: 0,
   },
   alignStartVertical: {
     top: 0,

@@ -50,7 +50,7 @@ const styles = stylex.create({
   },
   requiredAsterisk: {
     color: vars.feedbackDangerSolid,
-    marginLeft: vars.space1,
+    marginInlineStart: vars.space1,
   },
 
   textarea: {

@@ -82,4 +82,39 @@ describe('Toast', () => {
 
     expect(screen.queryByText('Auto Dismiss')).toBeNull();
   });
+
+  it('renders duration progress bar for auto-dismissing toast', () => {
+    render(<Toaster />);
+
+    act(() => {
+      toast({
+        title: 'Timed Toast',
+        duration: 4000,
+      });
+    });
+
+    expect(screen.getByTestId('toast-progress')).toBeDefined();
+  });
+
+  it('dismisses toast on swipe gesture beyond drag threshold', () => {
+    const handleClose = vi.fn();
+    render(<Toaster />);
+
+    act(() => {
+      toast({
+        title: 'Swipeable Toast',
+        duration: Infinity,
+        onClose: handleClose,
+      });
+    });
+
+    const toastEl = screen.getByRole('status');
+    // Simulate touch drag > 80px
+    fireEvent.touchStart(toastEl, { touches: [{ clientX: 100 }] });
+    fireEvent.touchMove(toastEl, { touches: [{ clientX: 200 }] });
+    fireEvent.touchEnd(toastEl, { changedTouches: [{ clientX: 200 }] });
+
+    expect(handleClose).toHaveBeenCalledTimes(1);
+    expect(screen.queryByText('Swipeable Toast')).toBeNull();
+  });
 });

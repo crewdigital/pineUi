@@ -33,6 +33,10 @@ export type ToastOptions = Omit<ToastData, 'id'> & {
 export interface ToastProps extends React.HTMLAttributes<HTMLDivElement> {
   toast: ToastData;
   onDismiss: (id: string) => void;
+  index?: number;
+  total?: number;
+  expanded?: boolean;
+  position?: ToastPosition;
   styleX?: stylex.StyleXStyles;
 }
 
@@ -125,6 +129,13 @@ export function useToast() {
   };
 }
 
+// ─── Keyframes ───────────────────────────────────────────────────────────────
+
+const progressKeyframes = stylex.keyframes({
+  '0%': { transform: 'scaleX(1)' },
+  '100%': { transform: 'scaleX(0)' },
+});
+
 // ─── StyleX Styles ───────────────────────────────────────────────────────────
 
 const styles = stylex.create({
@@ -180,9 +191,11 @@ const styles = stylex.create({
     boxShadow: vars.shadowLg,
     pointerEvents: 'auto',
     position: 'relative',
-    transitionProperty: 'transform, opacity',
-    transitionDuration: vars.motionDurationFast,
-    transitionTimingFunction: vars.motionEasingStandard,
+    overflow: 'hidden',
+    touchAction: 'pan-y',
+    userSelect: 'none',
+    boxSizing: 'border-box',
+    width: '100%',
   },
   toastSuccess: {
     borderLeftWidth: '4px',
@@ -244,15 +257,42 @@ const styles = stylex.create({
       boxShadow: `0 0 0 2px ${vars.focusOffset}, 0 0 0 4px ${vars.focusRing}`,
     },
   },
+  progressBar: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    height: '2px',
+    width: '100%',
+    backgroundColor: vars.actionPrimaryBackground,
+    transformOrigin: 'left',
+    animationName: progressKeyframes,
+    animationTimingFunction: 'linear',
+    animationFillMode: 'forwards',
+  },
 });
 
 // ─── Toast Item Component ────────────────────────────────────────────────────
 
 export const Toast = React.forwardRef<HTMLDivElement, ToastProps>(
-  function Toast({ toast: toastItem, onDismiss, styleX: styleXProp, ...restProps }, ref) {
+  function Toast(
+    {
+      toast: toastItem,
+      onDismiss,
+      index = 0,
+      total = 1,
+      expanded = false,
+      position = 'bottom-right',
+      styleX: styleXProp,
+      style: customStyle,
+      ...restProps
+    },
+    ref
+  ) {
     const { id, title, description, variant = 'default', duration = 5000, action } = toastItem;
 
     const [isPaused, setIsPaused] = React.useState(false);
+    const [dragX, setDragX] = React.useState(0);
+    const startXRef = React.useRef<number | null>(null);
 
     React.useEffect(() => {
       if (duration <= 0 || duration === Infinity || isPaused) return;
@@ -263,6 +303,34 @@ export const Toast = React.forwardRef<HTMLDivElement, ToastProps>(
 
       return () => clearTimeout(timer);
     }, [id, duration, isPaused, onDismiss]);
+
+    const handleDragStart = (clientX: number, target: EventTarget | null) => {
+      if ((target as HTMLElement)?.closest?.('button, a')) return;
+      startXRef.current = clientX;
+    };
+
+    const handleDragMove = (clientX: number) => {
+      if (startXRef.current === null) return;
+      setDragX(clientX - startXRef.current);
+    };
+
+    const handleDragEnd = (clientX: number) => {
+      const delta = startXRef.current !== null ? clientX - startXRef.current : dragX;
+      startXRef.current = null;
+      if (Math.abs(delta) > 80 || Math.abs(dragX) > 80) {
+        onDismiss(id);
+      } else {
+        setDragX(0);
+      }
+    };
+
+    const isTop = position.startsWith('top');
+    const stackY = !expanded && index > 0 ? (isTop ? index * 8 : -index * 8) : 0;
+    const stackScale = !expanded && index > 0 ? Math.max(0.88, 1 - index * 0.05) : 1;
+    const stackOpacity = !expanded && index > 2 ? 0 : !expanded && index > 0 ? Math.max(0.5, 1 - index * 0.15) : 1;
+    const stackZ = total - index;
+
+    const dynamicTransform = `translateX(${dragX}px) translateY(${stackY}px) scale(${stackScale})`;
 
     const variantStyle =
       variant === 'success'
@@ -284,6 +352,33 @@ export const Toast = React.forwardRef<HTMLDivElement, ToastProps>(
         onMouseLeave={() => setIsPaused(false)}
         onFocus={() => setIsPaused(true)}
         onBlur={() => setIsPaused(false)}
+        onPointerDown={(e) => handleDragStart(e.clientX ?? 0, e.target)}
+        onPointerMove={(e) => handleDragMove(e.clientX ?? 0)}
+        onPointerUp={(e) => handleDragEnd(e.clientX ?? 0)}
+        onPointerCancel={() => {
+          startXRef.current = null;
+          setDragX(0);
+        }}
+        onTouchStart={(e) => {
+          if (e.touches[0]) handleDragStart(e.touches[0].clientX, e.target);
+        }}
+        onTouchMove={(e) => {
+          if (e.touches[0]) handleDragMove(e.touches[0].clientX);
+        }}
+        onTouchEnd={(e) => {
+          if (e.changedTouches[0]) handleDragEnd(e.changedTouches[0].clientX);
+        }}
+        style={{
+          transform: dynamicTransform,
+          opacity: stackOpacity,
+          zIndex: stackZ,
+          transition:
+            dragX === 0
+              ? 'transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease'
+              : 'none',
+          pointerEvents: !expanded && index > 0 ? 'none' : 'auto',
+          ...(customStyle as React.CSSProperties),
+        }}
         {...stylex.props(styles.toast, variantStyle, styleXProp)}
         {...restProps}
       >
@@ -313,6 +408,18 @@ export const Toast = React.forwardRef<HTMLDivElement, ToastProps>(
             <line x1="6" y1="6" x2="18" y2="18" />
           </svg>
         </button>
+
+        {duration > 0 && duration !== Infinity && (
+          <div
+            data-testid="toast-progress"
+            aria-hidden="true"
+            style={{
+              animationDuration: `${duration}ms`,
+              animationPlayState: isPaused ? 'paused' : 'running',
+            }}
+            {...stylex.props(styles.progressBar)}
+          />
+        )}
       </div>
     );
   }
@@ -328,6 +435,7 @@ export const Toaster = React.forwardRef<HTMLDivElement, ToasterProps>(
     ref
   ) {
     const { toasts, dismiss } = useToast();
+    const [expanded, setExpanded] = React.useState(false);
 
     if (toasts.length === 0) return null;
 
@@ -351,14 +459,26 @@ export const Toaster = React.forwardRef<HTMLDivElement, ToasterProps>(
           role="region"
           aria-label="Notifications"
           tabIndex={-1}
+          onMouseEnter={() => setExpanded(true)}
+          onMouseLeave={() => setExpanded(false)}
+          onFocus={() => setExpanded(true)}
+          onBlur={(e) => {
+            if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+              setExpanded(false);
+            }
+          }}
           {...stylex.props(styles.viewport, positionStyle, styleXProp)}
           {...restProps}
         >
-          {toasts.map((toastItem) => (
+          {toasts.map((toastItem, index) => (
             <Toast
               key={toastItem.id}
               toast={toastItem}
               onDismiss={dismiss}
+              index={index}
+              total={toasts.length}
+              expanded={expanded}
+              position={position}
             />
           ))}
         </div>

@@ -40,3 +40,12 @@ export * from './toast/index.js';
 // Level 5 Complex Form Components
 export * from './select/index.js';
 export * from './combobox/index.js';
+
+// Direction & Internationalization (RTL)
+export {
+  DirectionProvider,
+  useDirection,
+  useIsRtl,
+  type Direction,
+  type DirectionProviderProps,
+} from '@pine-ui/behaviors';

@@ -73,4 +73,42 @@ describe('Combobox', () => {
 
     expect(screen.getByText('No results found.')).toBeDefined();
   });
+
+  it('supports multiple mode with chip tags, chip removal, and backspace deletion', () => {
+    const handleValuesChange = vi.fn();
+    render(
+      <Combobox multiple defaultValues={['react']} onValuesChange={handleValuesChange}>
+        <ComboboxInput placeholder="Select frameworks..." />
+        <ComboboxContent>
+          <ComboboxItem value="react">React</ComboboxItem>
+          <ComboboxItem value="vue">Vue</ComboboxItem>
+          <ComboboxItem value="angular">Angular</ComboboxItem>
+        </ComboboxContent>
+      </Combobox>
+    );
+
+    const input = screen.getByRole('combobox');
+    fireEvent.focus(input);
+
+    // Initial chip
+    expect(screen.getByText('React')).toBeDefined();
+
+    // Select Vue
+    const vue = screen.getByRole('option', { name: 'Vue' });
+    fireEvent.click(vue);
+
+    expect(handleValuesChange).toHaveBeenCalledWith(['react', 'vue']);
+
+    // Backspace deletion when query is empty
+    fireEvent.change(input, { target: { value: '' } });
+    fireEvent.keyDown(input, { key: 'Backspace' });
+
+    expect(handleValuesChange).toHaveBeenCalledWith(['react']);
+
+    // Remove chip via removal button
+    const removeReact = screen.getByRole('button', { name: 'Remove React' });
+    fireEvent.click(removeReact);
+
+    expect(handleValuesChange).toHaveBeenCalledWith([]);
+  });
 });
