@@ -189,7 +189,7 @@ export const customTheme = stylex.createTheme(vars, {
           color: textColor,
           padding: '32px',
           boxSizing: 'border-box',
-          fontFamily: 'system-ui, -apple-system, sans-serif',
+          fontFamily: "var(--pine-font-family-sans, Inter, -apple-system, sans-serif)",
           ['--pine-action-primary-background' as string]: activePalette.primary,
           ['--pine-action-primary-background-hover' as string]: activePalette.hover,
           ['--pine-action-primary-background-active' as string]: activePalette.active,

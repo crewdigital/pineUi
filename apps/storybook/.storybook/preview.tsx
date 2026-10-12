@@ -38,7 +38,7 @@ const withThemeDecorator = (Story: StoryFn, context: StoryContext) => {
     boxSizing: 'border-box' as const,
     backgroundColor: isHighContrast ? '#000000' : isDark ? '#030712' : '#ffffff',
     color: isHighContrast ? '#ffffff' : isDark ? '#f9fafb' : '#111827',
-    fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+    fontFamily: "var(--pine-font-family-sans, Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif)",
     transition: 'background-color 0.2s ease, color 0.2s ease',
   };
 

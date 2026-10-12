@@ -12,7 +12,7 @@ export default meta;
 
 export const Introduction: StoryObj = {
   render: () => (
-    <div style={{ fontFamily: 'system-ui, sans-serif', maxWidth: '600px', lineHeight: '1.6' }}>
+    <div style={{ fontFamily: "var(--pine-font-family-sans, Inter, sans-serif)", maxWidth: '600px', lineHeight: '1.6' }}>
       <h1>Welcome to Pine UI</h1>
       <p>
         An enterprise-grade, high-performance, accessible, semantic, strongly typed, token-driven
